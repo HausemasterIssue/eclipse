@@ -1,0 +1,134 @@
+buildscript {
+    repositories {
+        maven { url = 'https://files.minecraftforge.net/maven' }
+        maven { url = 'https://repo.spongepowered.org/repository/maven-public/' }
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:3.+'
+        classpath 'org.spongepowered:mixingradle:0.7-SNAPSHOT'
+        classpath 'com.github.jengelman.gradle.plugins:shadow:4.0.3'
+    }
+}
+        
+apply plugin: 'net.minecraftforge.gradle'
+apply plugin: 'org.spongepowered.mixin'
+apply plugin: 'com.github.johnrengelman.shadow'
+
+version = project.project_version
+group = project.project_group
+archivesBaseName = project.project_archivesBaseName
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+minecraft {
+    mappings channel: 'stable', version: '39-1.12'
+
+    runs {
+        client {
+            workingDirectory project.file('run')
+
+            property 'fml.coreMods.load', 'xyz.aesthetical.eclipse.mixin.ForgeMixinLoader'
+            property 'mixin.env.disableRefMap', 'true'
+
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            property 'forge.logging.console.level', 'debug'
+        }
+    }
+}
+
+configurations {
+    dependency
+
+    all {
+        resolutionStrategy {
+            force 'org.lwjgl.lwjgl:lwjgl-platform:2.9.4-nightly-20150209'
+        }
+    }
+}
+
+repositories {
+    maven {
+        name = 'spongepowered-repo'
+        url = 'https://repo.spongepowered.org/repository/maven-public/'
+    }
+    maven {
+        name = 'impactdevelopment-repo'
+        url = 'https://impactdevelopment.github.io/maven/'
+    }
+    maven {
+        name = "jitpack.io"
+        url = "https://jitpack.io"
+    }
+    mavenCentral()
+}
+
+dependencies {
+    minecraft 'net.minecraftforge:forge:1.12.2-14.23.5.2855'
+
+    // keep this at 0.7.11-SNAPSHOT so it works with future
+    dependency("org.spongepowered:mixin:${project.mixin_version}") {
+        exclude module: 'commons-io'
+        exclude module: 'gson'
+        exclude module: 'guava'
+        exclude module: 'launchwrapper'
+        exclude module: 'log4j-core'
+    }
+
+    // this makes mixins work, don't ask
+    annotationProcessor("org.spongepowered:mixin:${project.mixin_annotation_processor_version}:processor") {
+        exclude module: 'gson'
+    }
+
+    dependency("club.minnced:java-discord-rpc:${project.discord_rpc_version}") {
+        exclude module: 'jna'
+    }
+
+    dependency("org.json:json:${project.json_version}")
+
+    implementation "com.github.cabaletta:baritone:${project.baritone_version}"
+    dependency("cabaletta:baritone-api:${project.baritone_api_version}")
+
+    implementation configurations.dependency
+}
+
+compileJava {
+    options.encoding = "UTF-8"
+}
+
+jar {
+    manifest {
+        attributes([
+            "MixinConfigs": "mixins.eclipse.json",
+            "TweakClass": "org.spongepowered.asm.launch.MixinTweaker",
+            "FMLCorePluginContainsFMLMod": true,
+            "FMLCorePlugin": "xyz.aesthetical.eclipse.mixin.ForgeMixinLoader",
+            'ForceLoadAsMod': true
+        ])
+    }
+
+    from {
+        configurations.dependency.collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+    }
+}
+
+shadowJar {
+    exclude 'dummyThing' // remove the dummy modinfo file that forge uses
+    classifier = 'release' // add -releas at the end of the JAR
+}
+
+mixin {
+    add sourceSets.main, "mixins.eclipse.refmap.json" // add a refrence map for obfuscated properties/methods/classes (mappings)
+}
+
+reobf {
+    shadowJar {
+        classpath = sourceSets.main.compileClasspath // make sure to reobfuscate the jar shadowJar makes
+    }
+}
+
+build.dependsOn(shadowJar) // so we run shadowJar with the build task

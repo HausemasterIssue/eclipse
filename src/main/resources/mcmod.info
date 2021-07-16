@@ -1,0 +1,16 @@
+[
+{
+  "modid": "eclipse",
+  "name": "Eclipse",
+  "description": "1.12.2 Utility Mod for Anarchy Servers.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["ixxaesthetical"],
+  "credits": "me and the forge people idfk",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]

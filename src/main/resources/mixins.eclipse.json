@@ -1,0 +1,35 @@
+{
+  "required": true,
+  "minVersion": "0.7",
+  "compatibilityLevel": "JAVA_8",
+  "package": "xyz.aesthetical.eclipse.mixin.mixins",
+  "refmap": "mixins.eclipse.refmap.json",
+  "mixins": [
+    "entity.MixinEntityPlayerSP",
+    "entity.MixinPlayerControllerMP",
+
+    "network.MixinNetworkManager",
+    "network.packets.inbound.ISPacketEntityVelocity",
+    "network.packets.inbound.ISPacketExplosion",
+    "network.packets.inbound.MixinSPacketTimeUpdate",
+    "network.packets.outbound.ICPacketPlayer",
+
+    "render.MixinEntityRenderer",
+    "render.MixinItemRenderer",
+    "render.MixinParticleManager",
+    "render.MixinRenderLivingBase",
+
+    "world.blocks.state.MixinStateImplementation",
+    "world.blocks.MixinBlockCactus",
+    "world.blocks.MixinBlockFire",
+    "world.blocks.MixinBlockLiquid",
+    "world.blocks.MixinBlockSlime",
+    "world.blocks.MixinBlockSoulSand",
+    "world.blocks.MixinBlockWeb",
+    "world.ITimer",
+    "world.MixinWorldClient",
+
+    "IMinecraft",
+    "MixinMinecraft"
+  ]
+}
