@@ -50,6 +50,7 @@ public class ModuleManager {
         modules.add(new WebAura());
 
         // exploits
+        modules.add(new MountBypass());
         modules.add(new NewChunks());
         modules.add(new NoHandshake());
         modules.add(new Reach());
