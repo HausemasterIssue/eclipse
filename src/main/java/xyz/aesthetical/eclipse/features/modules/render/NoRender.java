@@ -14,6 +14,9 @@ public class NoRender extends Module {
     public final Setting<Boolean> particles = register(new Setting<>("Particles", false).setDescription("If to stop particles from rendering"));
     public final Setting<Boolean> fog = register(new Setting<>("Fog", false).setDescription("If to stop fog from rendering"));
     public final Setting<Boolean> fire = register(new Setting<>("Fire", false).setDescription("If to stop the fire overlay from rendering"));
+    public final Setting<Boolean> pumpkin = register(new Setting<>("Pumpkin", false).setDescription("If to stop the pumpkin overlay from rendering"));
+    public final Setting<Boolean> overlay = register(new Setting<>("Overlay", false).setDescription("If to stop various overlays from rendering"));
+    public final Setting<Boolean> portals = register(new Setting<>("Portals", false).setDescription("If to stop the portal overlay from rendering"));
 
     public NoRender() {
         instance = this;

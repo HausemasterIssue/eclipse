@@ -51,12 +51,12 @@ public class AutoTotem extends Module {
 
             // if theres a totem in that inventory slot,
             if (!stack.isEmpty() && stack.getItem() == Items.TOTEM_OF_UNDYING) {
-                boolean hadItemInOffhand = !Eclipse.mc.player.getHeldItemOffhand().isEmpty();
+                boolean offhandEmpty = Eclipse.mc.player.getHeldItemOffhand().isEmpty();
 
                 Eclipse.mc.playerController.windowClick(0, 45, 0, ClickType.PICKUP, Eclipse.mc.player);
                 Eclipse.mc.playerController.windowClick(0, i < 9 ? i + 36 : i, 0, ClickType.PICKUP, Eclipse.mc.player);
 
-                if (hadItemInOffhand) {
+                if (offhandEmpty) {
                     Eclipse.mc.playerController.windowClick(0, 45, 0, ClickType.PICKUP, Eclipse.mc.player);
                 }
 

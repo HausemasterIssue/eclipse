@@ -18,6 +18,8 @@
     "network.packets.outbound.ICPacketPlayer",
 
     "render.MixinEntityRenderer",
+    "render.MixinGuiBossOverlay",
+    "render.MixinGuiInGame",
     "render.MixinItemRenderer",
     "render.MixinParticleManager",
     "render.MixinRenderLivingBase",
