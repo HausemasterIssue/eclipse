@@ -62,6 +62,7 @@ public class ModuleManager {
         modules.add(new AutoTunnel());
         modules.add(new Avoid());
         modules.add(new FakePlayer());
+        modules.add(new FastUse());
         modules.add(new LiquidInteract());
         modules.add(new MiddleClickPearl());
         modules.add(new NoSwing());
