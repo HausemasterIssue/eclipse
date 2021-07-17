@@ -70,6 +70,7 @@ public class ModuleManager {
 
         // movement
         modules.add(new AutoWalk());
+        modules.add(new EntityControl());
         modules.add(new IceSpeed());
         modules.add(new Jesus());
         modules.add(new NoSlow());

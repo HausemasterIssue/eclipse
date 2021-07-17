@@ -5,6 +5,9 @@
   "package": "xyz.aesthetical.eclipse.mixin.mixins",
   "refmap": "mixins.eclipse.refmap.json",
   "mixins": [
+    "entity.ridden.MixinAbstractHorse",
+    "entity.ridden.MixinEntityLlama",
+    "entity.ridden.MixinEntityPig",
     "entity.MixinEntityPlayerSP",
     "entity.MixinPlayerControllerMP",
 
