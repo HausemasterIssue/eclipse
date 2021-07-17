@@ -25,12 +25,12 @@ public class ServerNotResponding extends HudElement {
     public void draw(int mouseX, int mouseY, float tickDelta) {
         if (Eclipse.serverManager.isServerUnresponsive()) {
             float timeNotResponding = Eclipse.serverManager.getServerRespondingTime() / 1000.0f;
-            String display = Eclipse.serverManager.format(timeNotResponding);
+            String display = "Server has not been responding for " + Eclipse.serverManager.format(timeNotResponding) + "s";
 
             width = Eclipse.textManager.getWidth(display);
             height = Eclipse.textManager.getHeight() + 8;
 
-            Eclipse.textManager.drawCentered("Server has not been responding for " + display + "s", (float) x, (float) y, textColor.getValue().getRGB());
+            Eclipse.textManager.draw(display, (float) x, (float) y, textColor.getValue().getRGB());
         }
     }
 }

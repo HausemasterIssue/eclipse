@@ -30,8 +30,16 @@ public abstract class HudElement {
         return name;
     }
 
+    public void setX(double x) {
+        this.x = x;
+    }
+
     public double getX() {
         return x;
+    }
+
+    public void setY(double y) {
+        this.y = y;
     }
 
     public double getY() {
@@ -60,5 +68,9 @@ public abstract class HudElement {
 
     public ArrayList<Setting> getSettings() {
         return settings;
+    }
+
+    public boolean isMouseInBounds(int mouseX, int mouseY) {
+        return mouseX >= x && mouseX <= x + width && mouseY >= y && mouseY <= y + height;
     }
 }

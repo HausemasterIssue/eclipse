@@ -29,7 +29,7 @@ public class TextManager {
         if (CustomFont.instance.isToggled()) {
             customFontRenderer.drawCenteredString(text, x, y, color);
         } else {
-            defaultFontRenderer.drawString(text, (int) x, (int) y, color);
+            defaultFontRenderer.drawString(text, (int) (x) - defaultFontRenderer.getStringWidth(text) / 2, (int) y, color);
         }
     }
 
@@ -43,7 +43,7 @@ public class TextManager {
 
     public int getWidth(String text) {
         if (CustomFont.instance.isToggled()) {
-            return customFontRenderer.getStringHeight(text);
+            return customFontRenderer.getStringWidth(text);
         } else {
             defaultFontRenderer.getStringWidth(text);
         }

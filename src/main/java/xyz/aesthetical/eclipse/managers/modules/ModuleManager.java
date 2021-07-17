@@ -35,6 +35,7 @@ public class ModuleManager {
         modules.add(new CustomFont());
         modules.add(new DiscordRPC());
         modules.add(new HUD());
+        modules.add(new HudEditor());
         modules.add(new Notifications());
         modules.add(new Safety());
         // modules.add(new Test());
