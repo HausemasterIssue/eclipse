@@ -1,10 +1,8 @@
-package xyz.aesthetical.eclipse.gui.hudeditor.elements.general;
+package xyz.aesthetical.eclipse.gui.hudeditor.elements;
 
 import net.minecraft.client.gui.ScaledResolution;
 import xyz.aesthetical.eclipse.Eclipse;
 import xyz.aesthetical.eclipse.features.settings.Setting;
-import xyz.aesthetical.eclipse.gui.hudeditor.elements.Category;
-import xyz.aesthetical.eclipse.gui.hudeditor.elements.HudElement;
 
 import java.awt.*;
 
@@ -12,7 +10,7 @@ public class ServerNotResponding extends HudElement {
     public final Setting<Color> textColor = register(new Setting<>("Text Color", new Color(71, 71, 71)).setDescription("The color to use in the text"));
 
     public ServerNotResponding() {
-        super("ServerNotResponding", Category.GENERAL);
+        super("ServerNotResponding");
     }
 
     @Override

@@ -1,16 +1,14 @@
-package xyz.aesthetical.eclipse.gui.hudeditor.elements.general;
+package xyz.aesthetical.eclipse.gui.hudeditor.elements;
 
 import net.minecraft.client.gui.ScaledResolution;
 import xyz.aesthetical.eclipse.Eclipse;
 import xyz.aesthetical.eclipse.features.settings.Setting;
-import xyz.aesthetical.eclipse.gui.hudeditor.elements.Category;
-import xyz.aesthetical.eclipse.gui.hudeditor.elements.HudElement;
 
 public class Welcomer extends HudElement {
     public final Setting<String> text = register(new Setting<>("Text", "Hello <player> :^)").setDescription("The text to welcome you with"));
 
-    public Welcomer(String name, Category category) {
-        super(name, category);
+    public Welcomer() {
+        super("Welcomer");
     }
 
     @Override

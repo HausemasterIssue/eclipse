@@ -6,7 +6,6 @@ import java.util.ArrayList;
 
 public abstract class HudElement {
     protected final String name;
-    protected final Category category;
     protected double x;
     protected double y;
     protected double width;
@@ -15,9 +14,8 @@ public abstract class HudElement {
 
     protected final ArrayList<Setting> settings = new ArrayList<>();
 
-    public HudElement(String name, Category category) {
+    public HudElement(String name) {
         this.name = name;
-        this.category = category;
     }
 
     public abstract void init();
@@ -30,10 +28,6 @@ public abstract class HudElement {
 
     public String getName() {
         return name;
-    }
-
-    public Category getCategory() {
-        return category;
     }
 
     public double getX() {
