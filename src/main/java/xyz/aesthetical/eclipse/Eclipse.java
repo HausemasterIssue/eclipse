@@ -18,6 +18,7 @@ import xyz.aesthetical.eclipse.managers.ServerManager;
 import xyz.aesthetical.eclipse.managers.TextManager;
 import xyz.aesthetical.eclipse.managers.commands.CommandManager;
 import xyz.aesthetical.eclipse.managers.friends.FriendManager;
+import xyz.aesthetical.eclipse.managers.macros.MacroManager;
 import xyz.aesthetical.eclipse.managers.modules.ModuleManager;
 import xyz.aesthetical.eclipse.managers.notifications.NotificationManager;
 
@@ -41,6 +42,7 @@ public class Eclipse {
     public static HoleManager holeManager;
     public static NotificationManager notificationManager;
     public static FriendManager friendManager;
+    public static MacroManager macroManager;
 
     @Mod.EventHandler
     public void onInit(FMLInitializationEvent event) {
@@ -60,6 +62,7 @@ public class Eclipse {
         holeManager = new HoleManager();
         notificationManager = new NotificationManager();
         friendManager = new FriendManager();
+        macroManager = new MacroManager();
 
         MinecraftForge.EVENT_BUS.register(moduleManager);
         MinecraftForge.EVENT_BUS.register(commandManager);
