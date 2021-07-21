@@ -5,10 +5,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
 import org.lwjgl.input.Keyboard;
 import xyz.aesthetical.eclipse.Eclipse;
-import xyz.aesthetical.eclipse.features.commands.client.SetFont;
-import xyz.aesthetical.eclipse.features.commands.module.Toggle;
-import xyz.aesthetical.eclipse.features.commands.server.Ping;
-import xyz.aesthetical.eclipse.features.commands.client.SetPrefix;
+import xyz.aesthetical.eclipse.features.commands.*;
 import xyz.aesthetical.eclipse.managers.commands.exceptions.InvalidArgumentException;
 import xyz.aesthetical.eclipse.managers.commands.text.ChatColor;
 import xyz.aesthetical.eclipse.managers.commands.text.TextBuilder;
@@ -22,15 +19,11 @@ public class CommandManager {
     private String prefix = ",";
 
     public CommandManager() {
-        // Client
+        commands.add(new Ping());
+        commands.add(new Search());
         commands.add(new SetFont());
         commands.add(new SetPrefix());
-
-        // Module
         commands.add(new Toggle());
-
-        // Server
-        commands.add(new Ping());
     }
 
     @SubscribeEvent(receiveCanceled = true)

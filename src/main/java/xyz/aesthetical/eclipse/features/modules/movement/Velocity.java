@@ -6,6 +6,7 @@ import net.minecraft.network.play.server.SPacketEntityVelocity;
 import net.minecraft.network.play.server.SPacketExplosion;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import xyz.aesthetical.eclipse.Eclipse;
+import xyz.aesthetical.eclipse.events.entity.PushEvent;
 import xyz.aesthetical.eclipse.events.network.PacketEvent;
 import xyz.aesthetical.eclipse.features.settings.NumberSetting;
 import xyz.aesthetical.eclipse.features.settings.Setting;
@@ -52,6 +53,13 @@ public class Velocity extends Module {
                     }
                 }
             }
+        }
+    }
+
+    @SubscribeEvent
+    public void onPush(PushEvent event) {
+        if (Module.fullNullCheck() && noPush.getValue()) {
+            event.setCanceled(true);
         }
     }
 }

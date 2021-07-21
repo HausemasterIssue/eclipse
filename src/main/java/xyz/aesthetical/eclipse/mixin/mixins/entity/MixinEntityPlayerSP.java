@@ -14,9 +14,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import xyz.aesthetical.eclipse.Eclipse;
 import xyz.aesthetical.eclipse.events.entity.MoveEvent;
 import xyz.aesthetical.eclipse.events.entity.MoveUpdateEvent;
+import xyz.aesthetical.eclipse.mixin.accessors.IEntityPlayerSP;
 
 @Mixin(EntityPlayerSP.class)
-public abstract class MixinEntityPlayerSP extends AbstractClientPlayer {
+public abstract class MixinEntityPlayerSP extends AbstractClientPlayer implements IEntityPlayerSP {
     public MixinEntityPlayerSP(World worldIn, GameProfile playerProfile) {
         super(worldIn, playerProfile);
     }
@@ -35,7 +36,7 @@ public abstract class MixinEntityPlayerSP extends AbstractClientPlayer {
         MinecraftForge.EVENT_BUS.post(event);
 
         if (!event.isCanceled()) {
-            super.move(type, x, y, z);
+            super.move(type, event.getX(), event.getY(), event.getZ());
         }
     }
 
@@ -46,6 +47,11 @@ public abstract class MixinEntityPlayerSP extends AbstractClientPlayer {
 
     @Inject(method = "onUpdateWalkingPlayer", at = @At("RETURN"))
     private void postOnUpdateWalkingPlayer(CallbackInfo info) {
-        MinecraftForge.EVENT_BUS.post(new MoveUpdateEvent(MoveUpdateEvent.Stage.PRE));
+        MinecraftForge.EVENT_BUS.post(new MoveUpdateEvent(MoveUpdateEvent.Stage.POST));
+    }
+
+    @Override
+    public void setInPortal(boolean inPortal) {
+        this.inPortal = inPortal;
     }
 }

@@ -32,8 +32,6 @@ public class VisualRange extends Module {
                         10L * 1000L
                 );
                 Eclipse.notificationManager.createNotification(notification);
-            } else {
-                // @todo send a message
             }
         }
     }
@@ -54,8 +52,6 @@ public class VisualRange extends Module {
                         10L * 1000L
                 );
                 Eclipse.notificationManager.createNotification(notification);
-            } else {
-                // @todo send a message
             }
         }
     }

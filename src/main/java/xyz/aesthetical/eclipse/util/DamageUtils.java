@@ -13,14 +13,26 @@ import xyz.aesthetical.eclipse.Eclipse;
 
 public class DamageUtils {
     public static float calculateDamage(double x, double y, double z, EntityPlayer target) {
-        double doublePower = 12; // 6 is power of end crystals, so 6*2 = 12
+        return calculateDamage(x, y, z, 6.0f, false, target);
+//        double doublePower = 12; // 6 is power of end crystals, so 6*2 = 12
+//        double distancedSize = target.getDistanceSq(x, y, z) / doublePower;
+//        double blast = target.world.getBlockDensity(new Vec3d(x, y, z), target.getEntityBoundingBox());
+//
+//        double impact = (1.0 - distancedSize) * blast;
+//        float damage = (float) ((impact * impact + impact) / 2.0f * 7.0f * doublePower + 1.0);
+//
+//        return getBlastReduction(target, getDamageMultiplier(damage), new Explosion(target.world, target, x, y, z, ((float) doublePower) / 2.0f, false, true));
+    }
+
+    public static float calculateDamage(double x, double y, double z, float power, boolean causesFire, EntityPlayer target) {
+        float doublePower = power * 2;
         double distancedSize = target.getDistanceSq(x, y, z) / doublePower;
         double blast = target.world.getBlockDensity(new Vec3d(x, y, z), target.getEntityBoundingBox());
 
         double impact = (1.0 - distancedSize) * blast;
         float damage = (float) ((impact * impact + impact) / 2.0f * 7.0f * doublePower + 1.0);
 
-        return getBlastReduction(target, getDamageMultiplier(damage), new Explosion(target.world, target, x, y, z, ((float) doublePower) / 2.0f, false, true));
+        return getBlastReduction(target, getDamageMultiplier(damage), new Explosion(target.world, target, x, y, z, power, causesFire, true));
     }
 
     public static float getBlastReduction(EntityPlayer target, float damage, Explosion explosion) {

@@ -1,9 +1,12 @@
 {
   "required": true,
-  "minVersion": "0.7",
+  "priority": 2147483647,
+  "mixinPriority": 2147483647,
+  "minVersion": "0.7-SNAPSHOT",
   "compatibilityLevel": "JAVA_8",
   "package": "xyz.aesthetical.eclipse.mixin.mixins",
   "refmap": "mixins.eclipse.refmap.json",
+  "verbose": true,
   "mixins": [
     "entity.ridden.MixinAbstractHorse",
     "entity.ridden.MixinEntityLlama",
@@ -11,20 +14,24 @@
     "entity.MixinEntityPlayerSP",
     "entity.MixinPlayerControllerMP",
 
+    "input.MixinKeyBinding",
+
     "network.MixinNetworkManager",
     "network.packets.inbound.ISPacketEntityVelocity",
     "network.packets.inbound.ISPacketExplosion",
     "network.packets.inbound.MixinSPacketTimeUpdate",
     "network.packets.outbound.ICPacketPlayer",
 
+    "render.IEntityRenderer",
     "render.MixinEntityRenderer",
     "render.MixinGuiBossOverlay",
-    "render.MixinGuiInGame",
+    "render.MixinGuiIngame",
     "render.MixinItemRenderer",
     "render.MixinParticleManager",
     "render.MixinRenderLivingBase",
 
     "world.blocks.state.MixinStateImplementation",
+    "world.blocks.MixinBlock",
     "world.blocks.MixinBlockCactus",
     "world.blocks.MixinBlockFire",
     "world.blocks.MixinBlockLiquid",
@@ -32,9 +39,13 @@
     "world.blocks.MixinBlockSoulSand",
     "world.blocks.MixinBlockWeb",
     "world.ITimer",
+    "world.MixinWorld",
     "world.MixinWorldClient",
 
     "IMinecraft",
     "MixinMinecraft"
-  ]
+  ],
+  "injectors": {
+    "maxShiftBy": 10
+  }
 }

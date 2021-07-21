@@ -37,7 +37,7 @@ public class ForgeEventProcessor {
     }
 
     @SubscribeEvent
-    public void onRenderWorldLast(RenderWorldLastEvent event) {
+    public void onRender(RenderWorldLastEvent event) {
         GlStateManager.disableTexture2D();
         GlStateManager.enableBlend();
         GlStateManager.disableAlpha();
@@ -45,9 +45,11 @@ public class ForgeEventProcessor {
         GlStateManager.shadeModel(GL11.GL_SMOOTH);
         GlStateManager.disableDepth();
 
-        MinecraftForge.EVENT_BUS.post(new RenderEvent(event.getPartialTicks()));
+        RenderEvent evt = new RenderEvent(event.getPartialTicks());
+        MinecraftForge.EVENT_BUS.post(evt);
 
-        GlStateManager.glLineWidth(1.0f);
+        GlStateManager.glLineWidth(1f);
+
         GlStateManager.shadeModel(GL11.GL_FLAT);
         GlStateManager.disableBlend();
         GlStateManager.enableAlpha();

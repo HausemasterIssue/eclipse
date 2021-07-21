@@ -14,8 +14,12 @@ import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import xyz.aesthetical.eclipse.events.world.blocks.LiquidCollisionEvent;
+import xyz.aesthetical.eclipse.features.modules.render.Xray;
+import xyz.aesthetical.eclipse.managers.XrayManager;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -36,6 +40,13 @@ public abstract class MixinStateImplementation extends BlockStateBase {
             }
         } else {
             block.addCollisionBoxToList(state, worldIn, pos, entityBox, collidingBoxes, entityIn, p_185908_6_);
+        }
+    }
+
+    @Inject(method = "getLightValue", at = @At("HEAD"), cancellable = true)
+    public void getLightValue(CallbackInfoReturnable<Integer> info) {
+        if (Xray.instance.isToggled() && XrayManager.instance.isValidBlock(block)) {
+            info.setReturnValue(100000);
         }
     }
 }

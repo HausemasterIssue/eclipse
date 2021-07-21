@@ -12,10 +12,7 @@ import org.lwjgl.opengl.Display;
 import xyz.aesthetical.eclipse.events.ForgeEventProcessor;
 import xyz.aesthetical.eclipse.events.client.ShutdownEvent;
 import xyz.aesthetical.eclipse.features.modules.render.Brightness;
-import xyz.aesthetical.eclipse.managers.HoleManager;
-import xyz.aesthetical.eclipse.managers.SafetyManager;
-import xyz.aesthetical.eclipse.managers.ServerManager;
-import xyz.aesthetical.eclipse.managers.TextManager;
+import xyz.aesthetical.eclipse.managers.*;
 import xyz.aesthetical.eclipse.managers.commands.CommandManager;
 import xyz.aesthetical.eclipse.managers.friends.FriendManager;
 import xyz.aesthetical.eclipse.managers.macros.MacroManager;
@@ -43,6 +40,7 @@ public class Eclipse {
     public static NotificationManager notificationManager;
     public static FriendManager friendManager;
     public static MacroManager macroManager;
+    public static XrayManager xrayManager;
 
     @Mod.EventHandler
     public void onInit(FMLInitializationEvent event) {
@@ -63,6 +61,7 @@ public class Eclipse {
         notificationManager = new NotificationManager();
         friendManager = new FriendManager();
         macroManager = new MacroManager();
+        xrayManager = new XrayManager();
 
         MinecraftForge.EVENT_BUS.register(moduleManager);
         MinecraftForge.EVENT_BUS.register(commandManager);

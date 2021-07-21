@@ -12,6 +12,7 @@ import net.minecraft.util.math.Vec3d;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL32;
 import xyz.aesthetical.eclipse.Eclipse;
+import xyz.aesthetical.eclipse.mixin.mixins.render.IEntityRenderer;
 
 public class RenderUtils {
     public static void drawFilledBox(AxisAlignedBB box, int color) {
@@ -76,47 +77,95 @@ public class RenderUtils {
         GlStateManager.popMatrix();
     }
 
-    public static void drawLine(float x, float y, float x2, float y2, float z, float z2, float width, boolean smooth, int color) {
+    public static void drawLine(double x, double y, double z, double x2, double y2, double z2, float width, boolean smooth, int color) {
         GlStateManager.pushMatrix();
         GlStateManager.disableTexture2D();
         GlStateManager.enableBlend();
         GlStateManager.disableAlpha();
         GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
         GlStateManager.shadeModel(GL11.GL_SMOOTH);
-        GlStateManager.disableDepth();
-        GlStateManager.depthMask(false);
-        GlStateManager.glLineWidth(width);
 
-        if (smooth) {
-            GL11.glEnable(GL11.GL_LINE_SMOOTH);
-            GL11.glHint(GL11.GL_LINE_SMOOTH_HINT, GL11.GL_NICEST);
-            GL11.glEnable(GL32.GL_DEPTH_CLAMP);
-        }
+        GL11.glLineWidth(width);
+        GL11.glEnable(GL11.GL_LINE_SMOOTH);
+        GL11.glHint(GL11.GL_LINE_SMOOTH_HINT, GL11.GL_NICEST);
+
+        GlStateManager.disableDepth();
+
+        GL11.glEnable(GL32.GL_DEPTH_CLAMP);
+
+        final Tessellator tessellator = Tessellator.getInstance();
+        final BufferBuilder bufferbuilder = tessellator.getBuffer();
 
         float alpha = (color >> 24 & 0xff) / 255f;
         float red = (color >> 16 & 0xff) / 255f;
         float green = (color >> 8 & 0xff) / 255f;
         float blue = (color & 0xff) / 255f;
 
-        Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder buffer = tessellator.getBuffer();
-
-        buffer.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION_COLOR);
-        buffer.pos(x, y, z).color(red, green, blue, alpha).endVertex();
-        buffer.pos(x2, y2, z2).color(red, green, blue, alpha).endVertex();
+        bufferbuilder.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION_COLOR);
+        bufferbuilder.pos(x, y, z).color(red, green, blue, alpha).endVertex();
+        bufferbuilder.pos(x2, y2, z2).color(red, green, blue, alpha).endVertex();
         tessellator.draw();
 
+        GlStateManager.shadeModel(GL11.GL_FLAT);
+        GL11.glDisable(GL11.GL_LINE_SMOOTH);
+        GlStateManager.enableDepth();
+        GL11.glDisable(GL32.GL_DEPTH_CLAMP);
+        GlStateManager.disableBlend();
+        GlStateManager.enableAlpha();
+        GlStateManager.enableTexture2D();
+        GlStateManager.popMatrix();
+    }
+
+    public static void drawTracer(Entity entity, float width, boolean smooth, boolean stem, int color) {
+        Vec3d eyes = Eclipse.mc.player.getLookVec();
+        double x = interpolate(entity.posX, entity.lastTickPosX) - Eclipse.mc.getRenderManager().viewerPosX;
+        double y = interpolate(entity.posY, entity.lastTickPosY) - Eclipse.mc.getRenderManager().viewerPosY;
+        double z = interpolate(entity.posZ, entity.lastTickPosZ) - Eclipse.mc.getRenderManager().viewerPosZ;
+
+        GlStateManager.disableTexture2D();
+        GlStateManager.enableBlend();
+        GlStateManager.disableAlpha();
+        GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+        GL11.glLineWidth(width);
+
         if (smooth) {
-            GL11.glDisable(GL11.GL_LINE_SMOOTH);
-            GL11.glDisable(GL32.GL_DEPTH_CLAMP);
+            GlStateManager.shadeModel(GL11.GL_SMOOTH);
+            GL11.glEnable(GL11.GL_LINE_SMOOTH);
+            GL11.glHint(GL11.GL_LINE_SMOOTH_HINT, GL11.GL_NICEST);
         }
 
-        GlStateManager.glLineWidth(1.0f);
-        GlStateManager.depthMask(true);
+        GlStateManager.disableDepth();
+        GL11.glEnable(GL32.GL_DEPTH_CLAMP);
+
+        final Tessellator tessellator = Tessellator.getInstance();
+        final BufferBuilder bufferbuilder = tessellator.getBuffer();
+
+        float alpha = (color >> 24 & 0xff) / 255f;
+        float red = (color >> 16 & 0xff) / 255f;
+        float green = (color >> 8 & 0xff) / 255f;
+        float blue = (color & 0xff) / 255f;
+
+        GL11.glLoadIdentity();
+        ((IEntityRenderer) Eclipse.mc.entityRenderer).doOrientCamera(Eclipse.mc.getRenderPartialTicks());
+
+        bufferbuilder.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION_COLOR);
+        bufferbuilder.pos(eyes.x, eyes.y + Eclipse.mc.player.getEyeHeight(), eyes.z).color(red, green, blue, alpha).endVertex();
+        bufferbuilder.pos(x, y, z).color(red, green, blue, alpha).endVertex();
+
+        if (stem) {
+            bufferbuilder.pos(x, y, z).color(red, green, blue, alpha).endVertex();
+            bufferbuilder.pos(x, y + entity.height, z).color(red, green, blue, alpha).endVertex();
+        }
+
+        tessellator.draw();
+
+        GlStateManager.shadeModel(GL11.GL_FLAT);
+        GL11.glDisable(GL11.GL_LINE_SMOOTH);
         GlStateManager.enableDepth();
-        GlStateManager.disableAlpha();
+        GL11.glDisable(GL32.GL_DEPTH_CLAMP);
         GlStateManager.disableBlend();
-        GlStateManager.popMatrix();
+        GlStateManager.enableAlpha();
+        GlStateManager.enableTexture2D();
     }
 
     public static void drawRect(double x, double y, double width, double height, int color) {
@@ -188,7 +237,7 @@ public class RenderUtils {
     }
 
     public static Vec3d interpolateEntity(Entity entity) {
-        return interpolateVec(entity.getPositionVector(), new Vec3d(entity.lastTickPosX, entity.lastTickPosY, entity.lastTickPosZ));
+        return interpolateVec(new Vec3d(entity.posX, entity.posY, entity.posZ), new Vec3d(entity.lastTickPosX, entity.lastTickPosY, entity.lastTickPosZ));
     }
 
     public static Vec3d transformScreen(Vec3d input) {

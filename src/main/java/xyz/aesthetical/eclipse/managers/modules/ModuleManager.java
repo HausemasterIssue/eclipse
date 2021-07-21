@@ -43,10 +43,12 @@ public class ModuleManager {
         // combat
         modules.add(new AutoBreaker());
         modules.add(new AutoTotem());
+        modules.add(new BedBomb());
         modules.add(new Burrow());
         modules.add(new Criticals());
         modules.add(new CrystalAura());
         modules.add(new HoleFiller());
+        modules.add(new KillAura());
         modules.add(new Surround());
         modules.add(new WebAura());
 
@@ -60,24 +62,31 @@ public class ModuleManager {
         modules.add(new XCarry());
 
         // misc
+        modules.add(new AutoRespawn());
+        modules.add(new AutoSalC1Dupe());
         modules.add(new AutoTunnel());
         modules.add(new Avoid());
         modules.add(new FakePlayer());
         modules.add(new FastUse());
         modules.add(new LiquidInteract());
         modules.add(new MiddleClickPearl());
+        modules.add(new NoRotate());
         modules.add(new NoSwing());
+        modules.add(new PortalModifier());
         modules.add(new Time());
         modules.add(new VisualRange());
 
         // movement
         modules.add(new AutoWalk());
         modules.add(new EntityControl());
+        modules.add(new GuiMove());
         modules.add(new IceSpeed());
         modules.add(new Jesus());
+        modules.add(new NoFall());
         modules.add(new NoSlow());
         modules.add(new ReverseStep());
         modules.add(new Scaffold());
+        modules.add(new Speed());
         modules.add(new Sprint());
         modules.add(new Velocity());
 
@@ -90,7 +99,10 @@ public class ModuleManager {
         modules.add(new ESP());
         modules.add(new HoleESP());
         modules.add(new NoRender());
+        modules.add(new Search());
+        modules.add(new Tracers());
         modules.add(new ViewModel());
+        modules.add(new Xray());
         modules.add(new Yaw());
 
         LOGGER.info("Loaded {} modules, registered ModuleManager to the forge EventBus", modules.size());

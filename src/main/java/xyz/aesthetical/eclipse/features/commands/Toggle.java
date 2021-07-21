@@ -1,4 +1,4 @@
-package xyz.aesthetical.eclipse.features.commands.module;
+package xyz.aesthetical.eclipse.features.commands;
 
 import net.minecraft.client.Minecraft;
 import xyz.aesthetical.eclipse.Eclipse;

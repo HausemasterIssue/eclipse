@@ -14,9 +14,10 @@ import java.util.Map;
 public class ForgeMixinLoader implements IFMLLoadingPlugin {
     public ForgeMixinLoader() {
         MixinBootstrap.init();
+        MixinEnvironment.getDefaultEnvironment().setObfuscationContext("searge");
+        MixinEnvironment.getDefaultEnvironment().setSide(MixinEnvironment.Side.CLIENT);
         Mixins.addConfiguration("mixins.eclipse.json");
         Mixins.addConfiguration("mixins.baritone.json"); // register baritone mixins and shit
-        MixinEnvironment.getDefaultEnvironment().setObfuscationContext("searge");
     }
 
     @Override

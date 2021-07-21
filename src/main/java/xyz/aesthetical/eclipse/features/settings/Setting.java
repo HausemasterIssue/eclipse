@@ -1,5 +1,8 @@
 package xyz.aesthetical.eclipse.features.settings;
 
+import net.minecraftforge.common.MinecraftForge;
+import xyz.aesthetical.eclipse.events.eclipse.ModuleToggledEvent;
+
 import java.util.function.Predicate;
 
 public class Setting<T> {
@@ -54,5 +57,9 @@ public class Setting<T> {
 
     public String getGroup() {
         return group;
+    }
+
+    public Setting<T> createClone() {
+        return new Setting<T>(name, defaultValue).setDescription(description).setVisibility(visibility);
     }
 }
