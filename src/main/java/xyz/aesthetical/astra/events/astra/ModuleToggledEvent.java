@@ -1,4 +1,4 @@
-package xyz.aesthetical.astra.events.eclipse;
+package xyz.aesthetical.astra.events.astra;
 
 import net.minecraftforge.fml.common.eventhandler.Event;
 import xyz.aesthetical.astra.managers.modules.Module;

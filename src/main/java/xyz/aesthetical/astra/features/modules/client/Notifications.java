@@ -3,7 +3,7 @@ package xyz.aesthetical.astra.features.modules.client;
 import com.google.common.collect.Lists;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import xyz.aesthetical.astra.Astra;
-import xyz.aesthetical.astra.events.eclipse.ModuleToggledEvent;
+import xyz.aesthetical.astra.events.astra.ModuleToggledEvent;
 import xyz.aesthetical.astra.features.settings.Setting;
 import xyz.aesthetical.astra.managers.commands.text.ChatColor;
 import xyz.aesthetical.astra.managers.modules.Module;

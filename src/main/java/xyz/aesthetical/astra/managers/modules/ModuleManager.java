@@ -9,7 +9,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.input.Keyboard;
 import xyz.aesthetical.astra.config.ModuleConfiguration;
-import xyz.aesthetical.astra.events.eclipse.ModuleToggledEvent;
+import xyz.aesthetical.astra.events.astra.ModuleToggledEvent;
 import xyz.aesthetical.astra.features.modules.client.*;
 import xyz.aesthetical.astra.features.modules.combat.*;
 import xyz.aesthetical.astra.features.modules.exploits.*;
