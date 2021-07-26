@@ -1,13 +1,8 @@
 package xyz.aesthetical.eclipse.gui.hudeditor;
 
 import net.minecraft.client.gui.GuiScreen;
-import xyz.aesthetical.eclipse.Eclipse;
-import xyz.aesthetical.eclipse.gui.clickgui.ClickGuiScreen;
 import xyz.aesthetical.eclipse.gui.hudeditor.components.Container;
-import xyz.aesthetical.eclipse.gui.hudeditor.elements.Arraylist;
-import xyz.aesthetical.eclipse.gui.hudeditor.elements.HudElement;
-import xyz.aesthetical.eclipse.gui.hudeditor.elements.ServerNotResponding;
-import xyz.aesthetical.eclipse.gui.hudeditor.elements.Welcomer;
+import xyz.aesthetical.eclipse.gui.hudeditor.elements.*;
 import xyz.aesthetical.eclipse.util.ColorUtil;
 import xyz.aesthetical.eclipse.util.RenderUtils;
 
@@ -26,6 +21,7 @@ public class GuiHUDEditor extends GuiScreen {
     private GuiHUDEditor() {
         elements.add(new Arraylist());
         elements.add(new ServerNotResponding());
+        elements.add(new Watermark());
         elements.add(new Welcomer());
 
         elements.forEach(HudElement::init);

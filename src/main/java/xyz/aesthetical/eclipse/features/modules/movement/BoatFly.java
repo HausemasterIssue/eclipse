@@ -1,6 +1,5 @@
 package xyz.aesthetical.eclipse.features.modules.movement;
 
-import xyz.aesthetical.eclipse.features.settings.NumberSetting;
 import xyz.aesthetical.eclipse.features.settings.Setting;
 import xyz.aesthetical.eclipse.managers.modules.Module;
 

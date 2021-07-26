@@ -2,6 +2,7 @@ package xyz.aesthetical.eclipse.gui.hudeditor.elements;
 
 import net.minecraft.client.gui.ScaledResolution;
 import xyz.aesthetical.eclipse.Eclipse;
+import xyz.aesthetical.eclipse.gui.hudeditor.HudElement;
 
 public class Arraylist extends HudElement {
     public Arraylist() {

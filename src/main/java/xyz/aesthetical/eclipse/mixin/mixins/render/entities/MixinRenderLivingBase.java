@@ -1,4 +1,4 @@
-package xyz.aesthetical.eclipse.mixin.mixins.render;
+package xyz.aesthetical.eclipse.mixin.mixins.render.entities;
 
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.entity.Render;
@@ -27,7 +27,7 @@ public abstract class MixinRenderLivingBase<T extends EntityLivingBase> extends 
         if (Chams.instance.isToggled() && Chams.instance.mode.getValue() == Chams.Mode.WALLHACK) {
             GL11.glDisable(2929);
             GL11.glDepthMask(false);
-            GL11.glColor4f(1.0f, 0.2f, 0.2f, 1.0f);
+            GL11.glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
             modelBase.render(entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scaleFactor);
             GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
             GL11.glDepthMask(true);

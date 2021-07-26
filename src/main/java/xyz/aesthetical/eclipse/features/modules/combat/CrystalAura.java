@@ -70,7 +70,6 @@ public class CrystalAura extends Module {
     private EnumHand crystalHand = EnumHand.MAIN_HAND;
 
     // double popping basically
-    private final ArrayList<Pair<BlockPos, Float>> fuckedPositions = new ArrayList<>();
     private final ArrayList<BlockPos> queuedPlace = new ArrayList<>();
     private final ArrayList<EntityEnderCrystal> queuedBreakCrystals = new ArrayList<>();
 
@@ -239,12 +238,7 @@ public class CrystalAura extends Module {
         List<BlockPos> crystalPlacePositions = WorldUtils.getCrystalPlacePositions(Eclipse.mc.player.getPositionVector(), placeRange.getValue().intValue(), oneDotThirteen.getValue());
 
         // if double pop positions were found
-        if (!fuckedPositions.isEmpty() && doublePop.getValue()) {
-            // @todo finish this
-            for (Pair<BlockPos, Float> pair : fuckedPositions) {
-
-            }
-        }
+        // @todo
 
         if (!crystalPlacePositions.isEmpty()) {
             loop: for (BlockPos pos : crystalPlacePositions) {

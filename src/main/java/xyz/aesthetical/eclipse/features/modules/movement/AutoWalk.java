@@ -13,7 +13,13 @@ import xyz.aesthetical.eclipse.managers.modules.Module;
 @Module.Mod(name = "AutoWalk", description = "Automatically walks")
 @Module.Info(category = Module.Category.MOVEMENT)
 public class AutoWalk extends Module {
+    public static AutoWalk instance;
+
     public final Setting<Mode> mode = register(new Setting<>("Mode", Mode.VANILLA).setDescription("How to walk automatically"));
+
+    public AutoWalk() {
+        instance = this;
+    }
 
     @Override
     public void onEnabled() {

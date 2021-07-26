@@ -1,6 +1,9 @@
 package xyz.aesthetical.eclipse.mixin.mixins.entity.ridden;
 
+import net.minecraft.entity.IJumpingMount;
 import net.minecraft.entity.passive.AbstractHorse;
+import net.minecraft.entity.passive.EntityAnimal;
+import net.minecraft.inventory.IInventoryChangedListener;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -9,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import xyz.aesthetical.eclipse.features.modules.movement.EntityControl;
 
 @Mixin(AbstractHorse.class)
-public abstract class MixinAbstractHorse extends AbstractHorse {
+public abstract class MixinAbstractHorse extends EntityAnimal implements IInventoryChangedListener, IJumpingMount {
     public MixinAbstractHorse(World worldIn) {
         super(worldIn);
     }

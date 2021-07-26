@@ -1,4 +1,4 @@
-package xyz.aesthetical.eclipse.mixin.mixins.render;
+package xyz.aesthetical.eclipse.mixin.mixins.render.entities;
 
 import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.client.resources.IResourceManagerReloadListener;
@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import xyz.aesthetical.eclipse.features.modules.render.CameraClip;
+import xyz.aesthetical.eclipse.features.modules.render.ViewClip;
 import xyz.aesthetical.eclipse.features.modules.render.NoRender;
 
 @Mixin(EntityRenderer.class)
@@ -55,11 +55,11 @@ public abstract class MixinEntityRenderer implements IResourceManagerReloadListe
 
     @ModifyVariable(method = "orientCamera", at = @At("STORE"), ordinal = 3, require = 1)
     private double preOrientCamera(double range) {
-        return CameraClip.instance.isToggled() ? CameraClip.instance.range.getValue().floatValue() : range;
+        return ViewClip.instance.isToggled() ? ViewClip.instance.range.getValue().floatValue() : range;
     }
 
     @ModifyVariable(method = "orientCamera", at = @At("STORE"), ordinal = 7, require = 1)
     private double postOrientCamera(double range) {
-        return CameraClip.instance.isToggled() ? CameraClip.instance.range.getValue().floatValue() : range;
+        return ViewClip.instance.isToggled() ? ViewClip.instance.range.getValue().floatValue() : range;
     }
 }

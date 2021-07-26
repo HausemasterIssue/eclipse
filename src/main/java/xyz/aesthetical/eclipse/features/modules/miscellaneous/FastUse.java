@@ -8,6 +8,7 @@ import xyz.aesthetical.eclipse.managers.modules.Module;
 import xyz.aesthetical.eclipse.mixin.mixins.IMinecraft;
 import xyz.aesthetical.eclipse.util.Timer;
 
+// @todo fix
 @Module.Mod(name = "FastUse", description = "Allows you to quickly use items")
 @Module.Info(category = Module.Category.MISCELLANEOUS)
 public class FastUse extends Module {
@@ -23,17 +24,22 @@ public class FastUse extends Module {
     @Override
     public void onDisabled() {
         timer.reset();
+        ((IMinecraft) Eclipse.mc).setRightClickDelayTimer(4);
     }
 
     @SubscribeEvent
     public void onUpdate(LivingEvent.LivingUpdateEvent event) {
         if (Module.fullNullCheck() && event.getEntityLiving() == Eclipse.mc.player) {
             if (Eclipse.mc.player.isHandActive()) {
-                if (timer.passedMs(delay.getValue().longValue())) {
-                    ((IMinecraft) Eclipse.mc).setRightClickDelayTimer(0);
+                if (delay.getValue().doubleValue() > 0.0) {
+                    if (!timer.passedMs(delay.getValue().longValue())) {
+                        return;
+                    }
+
+                    ((IMinecraft) Eclipse.mc).setRightClickDelayTimer(4);
                     timer.reset();
                 } else {
-                    ((IMinecraft) Eclipse.mc).setRightClickDelayTimer(4);
+                    ((IMinecraft) Eclipse.mc).setRightClickDelayTimer(0);
                 }
             }
         }

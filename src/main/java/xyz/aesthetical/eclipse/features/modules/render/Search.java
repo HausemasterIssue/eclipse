@@ -100,6 +100,12 @@ public class Search extends Module {
                     }
 
                     searcher.cancel();
+
+                    for (int j = 0; j < searcher.getPositions().size(); ++j) {
+                        BlockPos position = searcher.getPositions().get(j);
+                        positions.remove(position);
+                    }
+
                     searchers.remove(searcher);
                 }
             }

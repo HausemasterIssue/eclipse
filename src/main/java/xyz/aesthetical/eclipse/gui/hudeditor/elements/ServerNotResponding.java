@@ -3,6 +3,7 @@ package xyz.aesthetical.eclipse.gui.hudeditor.elements;
 import net.minecraft.client.gui.ScaledResolution;
 import xyz.aesthetical.eclipse.Eclipse;
 import xyz.aesthetical.eclipse.features.settings.Setting;
+import xyz.aesthetical.eclipse.gui.hudeditor.HudElement;
 
 import java.awt.*;
 

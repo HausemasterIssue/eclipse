@@ -17,8 +17,6 @@ public abstract class Configuration {
     public Configuration(Path path) {
         this.path = path;
         SERVICE.scheduleAtFixedRate(this::save, 5, 5, TimeUnit.MINUTES);
-
-        load();
     }
 
     public abstract void save();
@@ -37,7 +35,7 @@ public abstract class Configuration {
     }
 
     public void shutdown() {
-        save();
         SERVICE.shutdown();
+        save();
     }
 }

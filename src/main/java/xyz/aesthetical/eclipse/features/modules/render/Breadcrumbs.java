@@ -19,6 +19,7 @@ import java.util.ArrayList;
 public class Breadcrumbs extends Module {
     public final NumberSetting width = register(new NumberSetting("Width", 1.0f).setMin(0.1f).setMax(5.0f).setDescription("The width of the line"));
     public final Setting<Color> color = register(new Setting<>("Color", new Color(237, 47, 47)).setDescription("The color to render the line width"));
+    public final Setting<Boolean> smooth = register(new Setting<>("Smooth", true).setDescription("If the line should be smooth"));
 
     private final ArrayList<Crumb> crumbs = new ArrayList<>();
     private double x = -1.0;
@@ -42,11 +43,15 @@ public class Breadcrumbs extends Module {
                 return;
             }
 
-            crumbs.add(new Crumb(x, y, z, Eclipse.mc.player.posX, Eclipse.mc.player.posY, Eclipse.mc.player.posZ));
+            Crumb crumb = new Crumb(x, y, z, Eclipse.mc.player.posX, Eclipse.mc.player.posY, Eclipse.mc.player.posZ);
 
-            x = Eclipse.mc.player.posX;
-            y = Eclipse.mc.player.posY;
-            z = Eclipse.mc.player.posZ;
+            if (!crumbs.contains(crumb)) {
+                crumbs.add(crumb);
+
+                x = Eclipse.mc.player.posX;
+                y = Eclipse.mc.player.posY;
+                z = Eclipse.mc.player.posZ;
+            }
         }
     }
 
@@ -55,12 +60,25 @@ public class Breadcrumbs extends Module {
         if (Module.fullNullCheck() && !crumbs.isEmpty()) {
             GlStateManager.pushMatrix();
 
+            Color c = color.getValue();
+
             for (int i = 0; i < crumbs.size(); ++i) {
                 Crumb crumb = crumbs.get(i);
-                Vec3d pos1 = new Vec3d(crumb.x, crumb.y, crumb.z).add(RenderUtils.getCameraPos());
-                Vec3d pos2 = new Vec3d(crumb.x2, crumb.y2, crumb.z2).add(RenderUtils.getCameraPos());
 
-                RenderUtils.drawLine((float) pos1.x, (float) pos1.y, (float) pos1.z, (float) pos2.x, (float) pos2.y, (float) pos2.z, width.getValue().floatValue(), true, ColorUtil.toRGBA(255, 255, 255, 255));
+                Vec3d start = new Vec3d(crumb.x, crumb.y, crumb.z).add(RenderUtils.getCameraPos());
+                Vec3d end = new Vec3d(crumb.x2, crumb.y2, crumb.z2).add(RenderUtils.getCameraPos());
+
+                RenderUtils.drawLine(
+                        (float) start.x,
+                        (float) start.y,
+                        (float) start.z,
+                        (float) end.x,
+                        (float) end.y,
+                        (float) end.z,
+                        width.getValue().floatValue(),
+                        smooth.getValue(),
+                        ColorUtil.toRGBA(c.getRed(), c.getGreen(), c.getBlue(), 255)
+                );
             }
 
             GlStateManager.popMatrix();

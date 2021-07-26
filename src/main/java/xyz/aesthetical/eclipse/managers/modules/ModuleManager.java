@@ -38,10 +38,10 @@ public class ModuleManager {
         modules.add(new HudEditor());
         modules.add(new Notifications());
         modules.add(new Safety());
-        // modules.add(new Test());
 
         // combat
         modules.add(new AutoBreaker());
+        modules.add(new AutoLog());
         modules.add(new AutoTotem());
         modules.add(new BedBomb());
         modules.add(new Burrow());
@@ -49,6 +49,7 @@ public class ModuleManager {
         modules.add(new CrystalAura());
         modules.add(new HoleFiller());
         modules.add(new KillAura());
+        modules.add(new SelfTrap());
         modules.add(new Surround());
         modules.add(new WebAura());
 
@@ -62,8 +63,9 @@ public class ModuleManager {
         modules.add(new XCarry());
 
         // misc
+        modules.add(new AutoReconnect());
         modules.add(new AutoRespawn());
-        modules.add(new AutoSalC1Dupe());
+        // modules.add(new AutoSalC1Dupe());
         modules.add(new AutoTunnel());
         modules.add(new Avoid());
         modules.add(new FakePlayer());
@@ -93,8 +95,9 @@ public class ModuleManager {
         // render
         modules.add(new Breadcrumbs());
         modules.add(new Brightness());
-        modules.add(new CameraClip());
+        modules.add(new ViewClip());
         modules.add(new Chams());
+        // @todo modules.add(new CityESP());
         modules.add(new CustomFOV());
         modules.add(new ESP());
         modules.add(new HoleESP());
@@ -106,11 +109,9 @@ public class ModuleManager {
         modules.add(new Yaw());
 
         LOGGER.info("Loaded {} modules, registered ModuleManager to the forge EventBus", modules.size());
-    }
 
-    public ModuleManager init() {
-        configuration = new ModuleConfiguration();
-        return this;
+        configuration = new ModuleConfiguration(this);
+        configuration.load();
     }
 
     @SubscribeEvent(receiveCanceled = true)
@@ -184,5 +185,9 @@ public class ModuleManager {
         }
 
         return list;
+    }
+
+    public ModuleConfiguration getConfiguration() {
+        return configuration;
     }
 }

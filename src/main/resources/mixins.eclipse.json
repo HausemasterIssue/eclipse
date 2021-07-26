@@ -22,13 +22,14 @@
     "network.packets.inbound.MixinSPacketTimeUpdate",
     "network.packets.outbound.ICPacketPlayer",
 
-    "render.IEntityRenderer",
-    "render.MixinEntityRenderer",
+    "render.entities.IEntityRenderer",
+    "render.entities.MixinEntityRenderer",
+    "render.entities.MixinRenderLivingBase",
+    "render.gui.MixinGuiDisconnected",
     "render.MixinGuiBossOverlay",
     "render.MixinGuiIngame",
     "render.MixinItemRenderer",
     "render.MixinParticleManager",
-    "render.MixinRenderLivingBase",
 
     "world.blocks.state.MixinStateImplementation",
     "world.blocks.MixinBlock",

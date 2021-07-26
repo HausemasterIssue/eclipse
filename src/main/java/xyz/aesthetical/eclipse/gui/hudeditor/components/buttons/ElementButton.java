@@ -3,7 +3,7 @@ package xyz.aesthetical.eclipse.gui.hudeditor.components.buttons;
 import xyz.aesthetical.eclipse.Eclipse;
 import xyz.aesthetical.eclipse.gui.clickgui.components.Component;
 import xyz.aesthetical.eclipse.gui.clickgui.components.buttons.Button;
-import xyz.aesthetical.eclipse.gui.hudeditor.elements.HudElement;
+import xyz.aesthetical.eclipse.gui.hudeditor.HudElement;
 import xyz.aesthetical.eclipse.util.ColorUtil;
 import xyz.aesthetical.eclipse.util.RenderUtils;
 

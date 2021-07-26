@@ -25,6 +25,7 @@ public class MixinItemRenderer {
         if (ViewModel.instance.isToggled()) {
             Vec3d offset = ViewModel.instance.getOffsets(handSide);
             GlStateManager.translate(offset.x, offset.y, offset.z);
+            // @todo GlStateManager#scale and rotate for ViewModel
         }
     }
 
@@ -33,6 +34,7 @@ public class MixinItemRenderer {
         if (ViewModel.instance.isToggled()) {
             Vec3d offset = ViewModel.instance.getOffsets(handSide);
             GlStateManager.translate(offset.x, offset.y, offset.z);
+            // @todo GlStateManager#scale and rotate for ViewModel
         }
     }
 }

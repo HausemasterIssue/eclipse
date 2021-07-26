@@ -43,7 +43,7 @@ public class HoleManager {
             // @todo make the range a setting somewhere
             List<BlockPos> blocks = WorldUtils.getSphere(Eclipse.mc.player.getPosition().add(-0.5, -0.5, -0.5), 5, 5, false, true, 0);
             loop0: for (BlockPos pos : blocks) {
-                if (WorldUtils.getBlockFromPos(pos) != Blocks.AIR && WorldUtils.getBlockFromPos(pos.add(0.0, 1.0, 0.0)) != Blocks.AIR) {
+                if (WorldUtils.getBlockFromPos(pos) != Blocks.AIR || WorldUtils.getBlockFromPos(pos.add(0.0, 1.0, 0.0)) != Blocks.AIR) {
                     continue;
                 }
 

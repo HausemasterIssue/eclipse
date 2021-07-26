@@ -2,7 +2,7 @@ package xyz.aesthetical.eclipse.events.eclipse;
 
 import net.minecraftforge.fml.common.eventhandler.Event;
 import xyz.aesthetical.eclipse.features.settings.Setting;
-import xyz.aesthetical.eclipse.gui.hudeditor.elements.HudElement;
+import xyz.aesthetical.eclipse.gui.hudeditor.HudElement;
 import xyz.aesthetical.eclipse.managers.modules.Module;
 
 public class SettingChangeEvent extends Event {

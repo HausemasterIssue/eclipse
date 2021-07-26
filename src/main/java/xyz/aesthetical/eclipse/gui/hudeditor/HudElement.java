@@ -1,4 +1,4 @@
-package xyz.aesthetical.eclipse.gui.hudeditor.elements;
+package xyz.aesthetical.eclipse.gui.hudeditor;
 
 import xyz.aesthetical.eclipse.features.settings.Setting;
 

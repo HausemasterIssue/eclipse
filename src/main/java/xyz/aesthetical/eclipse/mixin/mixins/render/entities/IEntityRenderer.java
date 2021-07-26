@@ -1,4 +1,4 @@
-package xyz.aesthetical.eclipse.mixin.mixins.render;
+package xyz.aesthetical.eclipse.mixin.mixins.render.entities;
 
 import net.minecraft.client.renderer.EntityRenderer;
 import org.spongepowered.asm.mixin.Mixin;

@@ -4,7 +4,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -12,6 +11,7 @@ import org.lwjgl.opengl.Display;
 import xyz.aesthetical.eclipse.events.ForgeEventProcessor;
 import xyz.aesthetical.eclipse.events.client.ShutdownEvent;
 import xyz.aesthetical.eclipse.features.modules.render.Brightness;
+import xyz.aesthetical.eclipse.features.modules.render.CustomFOV;
 import xyz.aesthetical.eclipse.managers.*;
 import xyz.aesthetical.eclipse.managers.commands.CommandManager;
 import xyz.aesthetical.eclipse.managers.friends.FriendManager;
@@ -46,8 +46,12 @@ public class Eclipse {
     public void onInit(FMLInitializationEvent event) {
         LOGGER.info("Loading AesthetiHack (eclipse) v{}", MOD_VERSION);
 
-        MinecraftForge.EVENT_BUS.register(this);
-        MinecraftForge.EVENT_BUS.register(new ForgeEventProcessor());
+        FileManager fileManager = FileManager.getInstance();
+        if (!fileManager.exists(fileManager.getClientFolder())) {
+            fileManager.mkDir(fileManager.getClientFolder(), false);
+            LOGGER.info("Created new client config folder at " + fileManager.getClientFolder());
+        }
+
         Display.setTitle("AesthetiHack v" + MOD_VERSION);
 
         mc = Minecraft.getMinecraft();
@@ -63,20 +67,15 @@ public class Eclipse {
         macroManager = new MacroManager();
         xrayManager = new XrayManager();
 
+        MinecraftForge.EVENT_BUS.register(this);
+        MinecraftForge.EVENT_BUS.register(new ForgeEventProcessor());
         MinecraftForge.EVENT_BUS.register(moduleManager);
         MinecraftForge.EVENT_BUS.register(commandManager);
         MinecraftForge.EVENT_BUS.register(serverManager);
         MinecraftForge.EVENT_BUS.register(holeManager);
         MinecraftForge.EVENT_BUS.register(notificationManager);
 
-        // this is how we know the client has initialized properly
-        LOGGER.info("You can tell me that I'm perfect, cause you've never seen me hurtin' only know what's on the surface, say I'm fine, but I'm not fine.");
-        LOGGER.info("When the demons are in my head, sometimes I just won't leave my bed. So if you're leaving I'll understand, understand...");
-    }
-
-    @Mod.EventHandler
-    public void onPostInit(FMLPostInitializationEvent event) {
-        // moduleManager.init();
+        LOGGER.info("Loaded and registered all listeners! Welcome to AesthetiHack :^)");
     }
 
     @SubscribeEvent
@@ -84,6 +83,10 @@ public class Eclipse {
         LOGGER.info("Shutting down AesthtiHack v{}", MOD_VERSION);
 
         Eclipse.mc.gameSettings.gammaSetting = Brightness.oldGamma;
-        // save manager settings here
+        Eclipse.mc.gameSettings.fovSetting = CustomFOV.oldFov;
+
+        LOGGER.info("Saving manager states...");
+
+        moduleManager.getConfiguration().shutdown();
     }
 }

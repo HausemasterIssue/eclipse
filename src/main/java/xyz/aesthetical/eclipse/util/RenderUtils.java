@@ -12,7 +12,7 @@ import net.minecraft.util.math.Vec3d;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL32;
 import xyz.aesthetical.eclipse.Eclipse;
-import xyz.aesthetical.eclipse.mixin.mixins.render.IEntityRenderer;
+import xyz.aesthetical.eclipse.mixin.mixins.render.entities.IEntityRenderer;
 
 public class RenderUtils {
     public static void drawFilledBox(AxisAlignedBB box, int color) {
