@@ -1,8 +1,8 @@
 [
 {
-  "modid": "eclipse",
-  "name": "Eclipse",
-  "description": "1.12.2 Utility Mod for Anarchy Servers.",
+  "modid": "astra",
+  "name": "Astra",
+  "description": "1.12.2 client for Anarchy Servers.",
   "version": "${version}",
   "mcversion": "${mcversion}",
   "url": "",

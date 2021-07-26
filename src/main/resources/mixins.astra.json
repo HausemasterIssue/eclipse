@@ -1,0 +1,52 @@
+{
+  "required": true,
+  "priority": 2147483647,
+  "mixinPriority": 2147483647,
+  "minVersion": "0.7-SNAPSHOT",
+  "compatibilityLevel": "JAVA_8",
+  "package": "xyz.aesthetical.astra.mixin.mixins",
+  "refmap": "mixins.astra.refmap.json",
+  "verbose": true,
+  "mixins": [
+    "entity.ridden.MixinAbstractHorse",
+    "entity.ridden.MixinEntityLlama",
+    "entity.ridden.MixinEntityPig",
+    "entity.MixinEntityPlayerSP",
+    "entity.MixinPlayerControllerMP",
+
+    "input.MixinKeyBinding",
+
+    "network.MixinNetworkManager",
+    "network.packets.inbound.ISPacketEntityVelocity",
+    "network.packets.inbound.ISPacketExplosion",
+    "network.packets.inbound.MixinSPacketTimeUpdate",
+    "network.packets.outbound.ICPacketPlayer",
+
+    "render.entities.IEntityRenderer",
+    "render.entities.MixinEntityRenderer",
+    "render.entities.MixinRenderLivingBase",
+    "render.gui.MixinGuiDisconnected",
+    "render.MixinGuiBossOverlay",
+    "render.MixinGuiIngame",
+    "render.MixinItemRenderer",
+    "render.MixinParticleManager",
+
+    "world.blocks.state.MixinStateImplementation",
+    "world.blocks.MixinBlock",
+    "world.blocks.MixinBlockCactus",
+    "world.blocks.MixinBlockFire",
+    "world.blocks.MixinBlockLiquid",
+    "world.blocks.MixinBlockSlime",
+    "world.blocks.MixinBlockSoulSand",
+    "world.blocks.MixinBlockWeb",
+    "world.ITimer",
+    "world.MixinWorld",
+    "world.MixinWorldClient",
+
+    "IMinecraft",
+    "MixinMinecraft"
+  ],
+  "injectors": {
+    "maxShiftBy": 10
+  }
+}

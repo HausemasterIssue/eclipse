@@ -30,7 +30,7 @@ minecraft {
         client {
             workingDirectory project.file('run')
 
-            property 'fml.coreMods.load', 'xyz.aesthetical.eclipse.mixin.ForgeMixinLoader'
+            property 'fml.coreMods.load', 'xyz.aesthetical.astra.mixin.ForgeMixinLoader'
             property 'mixin.env.disableRefMap', 'true'
 
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
@@ -106,10 +106,10 @@ compileJava {
 jar {
     manifest {
         attributes([
-            "MixinConfigs": "mixins.eclipse.json",
+            "MixinConfigs": "mixins.astra.json",
             "TweakClass": "org.spongepowered.asm.launch.MixinTweaker",
             "FMLCorePluginContainsFMLMod": true,
-            "FMLCorePlugin": "xyz.aesthetical.eclipse.mixin.ForgeMixinLoader",
+            "FMLCorePlugin": "xyz.aesthetical.astra.mixin.ForgeMixinLoader",
             'ForceLoadAsMod': true
         ])
     }
@@ -128,7 +128,7 @@ shadowJar {
 
 mixin {
     defaultObfuscationEnv "searge"
-    add sourceSets.main, "mixins.eclipse.refmap.json" // add a refrence map for obfuscated properties/methods/classes (mappings)
+    add sourceSets.main, "mixins.astra.refmap.json" // add a refrence map for obfuscated properties/methods/classes (mappings)
 }
 
 reobf {
