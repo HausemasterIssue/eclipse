@@ -39,4 +39,9 @@ public class BooleanButton extends Button {
         super.toggle();
         setting.setValue(!setting.getValue());
     }
+
+    @Override
+    public boolean isVisible() {
+        return setting.isVisible();
+    }
 }

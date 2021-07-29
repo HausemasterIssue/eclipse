@@ -15,7 +15,7 @@ public class Ping extends Command {
         send(new TextBuilder()
                 .append(ChatColor.Dark_Gray, "Your ping is")
                 .append(" ")
-                .append(ChatColor.Red, String.valueOf(Astra.serverManager.getPing(Astra.mc.player)) + "ms")
+                .append(ChatColor.Red, Astra.serverManager.getPing(Astra.mc.player) + "ms")
                 .append(ChatColor.Dark_Gray, ".")
         );
     }

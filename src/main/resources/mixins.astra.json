@@ -11,6 +11,7 @@
     "entity.ridden.MixinAbstractHorse",
     "entity.ridden.MixinEntityLlama",
     "entity.ridden.MixinEntityPig",
+    "entity.IEntityEnderPearl",
     "entity.MixinEntityPlayerSP",
     "entity.MixinPlayerControllerMP",
 
@@ -20,6 +21,7 @@
     "network.packets.inbound.ISPacketEntityVelocity",
     "network.packets.inbound.ISPacketExplosion",
     "network.packets.inbound.MixinSPacketTimeUpdate",
+    "network.packets.outbound.ICPacketChatMessage",
     "network.packets.outbound.ICPacketPlayer",
 
     "render.entities.IEntityRenderer",

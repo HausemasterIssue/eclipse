@@ -19,6 +19,7 @@ public class CommandManager {
     private String prefix = ",";
 
     public CommandManager() {
+        commands.add(new Help());
         commands.add(new Ping());
         commands.add(new Search());
         commands.add(new SetFont());

@@ -52,6 +52,10 @@ public class ModuleButton extends Button {
         if (expanded) {
             double h = 1.0;
             for (Component component : components) {
+                if (!component.isVisible()) {
+                    continue;
+                }
+
                 component.setX(x + 1);
                 component.setY(y + (h += component.getHeight() + 1));
                 component.setWidth(width - 4.0);
@@ -66,7 +70,7 @@ public class ModuleButton extends Button {
     public void mouseClicked(int mouseX, int mouseY, int button) {
         super.mouseClicked(mouseX, mouseY, button);
         if (expanded) {
-            components.forEach(component -> component.mouseClicked(mouseX, mouseY, button));
+            components.stream().filter(Component::isVisible).forEach(component -> component.mouseClicked(mouseX, mouseY, button));
         }
     }
 
@@ -83,7 +87,7 @@ public class ModuleButton extends Button {
     public void mouseReleased(int mouseX, int mouseY, int button) {
         super.mouseReleased(mouseX, mouseY, button);
         if (expanded) {
-            components.forEach(component -> component.mouseReleased(mouseX, mouseY, button));
+            components.stream().filter(Component::isVisible).forEach(component -> component.mouseReleased(mouseX, mouseY, button));
         }
     }
 
@@ -91,7 +95,7 @@ public class ModuleButton extends Button {
     public void keyTyped(char character, int code) {
         super.keyTyped(character, code);
         if (expanded) {
-            components.forEach(component -> component.keyTyped(character, code));
+            components.stream().filter(Component::isVisible).forEach(component -> component.keyTyped(character, code));
         }
     }
 
@@ -109,6 +113,10 @@ public class ModuleButton extends Button {
 
         if (expanded) {
             for (Component item : components) {
+                if (!item.isVisible()) {
+                    continue;
+                }
+
                 h += item.getHeight() + 1.0;
             }
         }

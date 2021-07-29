@@ -7,15 +7,11 @@ import xyz.aesthetical.astra.util.EnumConverter;
 
 public class EnumSelection extends Component {
     private final Setting<Enum> setting;
-    // private boolean opened = false;
-
-    // private final EnumConverter converter;
 
     public EnumSelection(Setting<Enum> setting) {
         super(setting.getName() + ": " + setting.getValue(), 0.0, 12.0);
 
         this.setting = setting;
-        // this.converter = new EnumConverter(setting.getValue().getClass());
     }
 
     @Override
@@ -29,13 +25,11 @@ public class EnumSelection extends Component {
 
         if (isMouseInBounds(mouseX, mouseY) && button == 0) {
             setting.setValue(EnumConverter.increaseEnum(setting.getValue()));
-        } else if (button == 1) {
-            // @todo, combo box typa shit ig lol
         }
     }
 
-//    @Override
-//    public double getHeight() {
-//        return setting.getValue().getClass().getEnumConstants().length * 13.5;
-//    }
+    @Override
+    public boolean isVisible() {
+        return setting.isVisible();
+    }
 }

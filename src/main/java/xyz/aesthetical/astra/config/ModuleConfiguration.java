@@ -15,8 +15,6 @@ public class ModuleConfiguration extends Configuration {
     public ModuleConfiguration(ModuleManager manager) {
         super(FileManager.getInstance().getClientFolder().resolve("modules.json"));
 
-        System.out.println(path.toString());
-
         this.moduleManager = manager;
     }
 
@@ -87,7 +85,7 @@ public class ModuleConfiguration extends Configuration {
                             } else if (setting.getValue() instanceof Integer) {
                                 setting.setValue(this.<Integer>get(settings, key, (Integer) setting.getValue()));
                             } else if (setting.getValue() instanceof Float) {
-                                setting.setValue(this.<Float>get(settings, key, (Float) setting.getValue()));
+                                setting.setValue(settings.getFloat(key));
                             } else {
                                 setting.setValue(value);
                             }

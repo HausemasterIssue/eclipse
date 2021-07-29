@@ -7,38 +7,57 @@ import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import xyz.aesthetical.astra.Astra;
 import xyz.aesthetical.astra.managers.modules.Module;
+import xyz.aesthetical.astra.util.Pair;
 
+import java.util.Random;
 import java.util.UUID;
 
 @Module.Mod(name = "FakePlayer", description = "Spawns a fake player to test out configs")
 @Module.Info(category = Module.Category.MISCELLANEOUS)
 public class FakePlayer extends Module {
-    private EntityOtherPlayerMP fakePlayer = null;
+    private static final Random RNG = new Random();
+    private static final Pair<String, UUID>[] ACCOUNTS = new Pair[] {
+            new Pair<>("popbob", UUID.fromString("0f75a81d-70e5-43c5-b892-f33c524284f2")),
+            new Pair<>("Fit", UUID.fromString("fdee323e-7f0c-4c15-8d1c-0f277442342a")),
+            new Pair<>("Nes", UUID.fromString("9d1f7b2c-d4ee-4702-9430-5e48265a0fa8")),
+            new Pair<>("Aestheticall", UUID.fromString("873c0367-7ba9-4a9a-96ae-fa312ae756cb")),
+            new Pair<>("Pryobite", UUID.fromString("724c7d3b-87d5-4758-8207-8aa9424360de")),
+            new Pair<>("iTristan", UUID.fromString("64a5c834-514b-4024-9aa4-515719f6e7fa"))
+    };
+
+    private EntityOtherPlayerMP fake = null;
 
     @SubscribeEvent
     public void onWorldUnload(WorldEvent.Unload event) {
-        fakePlayer = null;
+        fake = null;
         toggle();
     }
 
     @Override
     public void onEnabled() {
         if (Module.fullNullCheck()) {
-            fakePlayer = new EntityOtherPlayerMP(Astra.mc.world, new GameProfile(UUID.fromString("873c0367-7ba9-4a9a-96ae-fa312ae756cb"), "ixxaesthetical"));
-            fakePlayer.copyLocationAndAnglesFrom(Astra.mc.player);
-            fakePlayer.inventory.copyInventory(Astra.mc.player.inventory);
-            fakePlayer.setEntityId(-69420);
-            fakePlayer.setSpawnPoint(Astra.mc.player.getPosition(), true);
-            fakePlayer.setGameType(GameType.SURVIVAL);
+            Pair<String, UUID> account = ACCOUNTS[RNG.nextInt(ACCOUNTS.length - 1)];
 
-            Astra.mc.world.spawnEntity(fakePlayer);
+            fake = new EntityOtherPlayerMP(Astra.mc.world, new GameProfile(account.getValue(), account.getKey()));
+            fake.copyLocationAndAnglesFrom(Astra.mc.player);
+            fake.inventory.copyInventory(Astra.mc.player.inventory);
+            fake.setEntityId(-69420);
+            fake.setGameType(GameType.SURVIVAL);
+
+            Astra.mc.world.spawnEntity(fake);
         }
     }
 
+    @Override
+    public void onDisabled() {
+        remove();
+    }
+
     private void remove() {
-        if (fakePlayer != null) {
-            Astra.mc.world.removeEntityDangerously(fakePlayer);
-            fakePlayer = null;
+        if (fake != null) {
+            Astra.mc.world.removeEntityFromWorld(fake.getEntityId());
+            Astra.mc.world.removeEntityDangerously(fake);
+            fake = null;
         }
     }
 }

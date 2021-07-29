@@ -63,11 +63,11 @@ public class Strafe extends Mode {
                 }
 
                 case 2: {
-                    double motionY = 0.40123128;
-                    if (Astra.mc.player.moveForward == 0.0f && Astra.mc.player.moveStrafing == 0.0f || !Astra.mc.player.onGround) {
+                    if ((Astra.mc.player.moveForward == 0.0f && Astra.mc.player.moveStrafing == 0.0f) || !Astra.mc.player.onGround) {
                         break;
                     }
 
+                    double motionY = 0.40123128;
                     if (Astra.mc.player.isPotionActive(MobEffects.JUMP_BOOST)) {
                         motionY += (Astra.mc.player.getActivePotionEffect(MobEffects.JUMP_BOOST).getAmplifier() + 1) * 0.1;
                     }
@@ -98,9 +98,9 @@ public class Strafe extends Mode {
                     strafe = Astra.mc.player.movementInput.moveStrafe,
                     yaw = Astra.mc.player.rotationYaw;
 
-            if (forward == 0.0 && strafe == 0.0) {
+            if (forward == 0.0f && strafe == 0.0f) {
                 event.setX(0.0);
-                event.setY(0.0);
+                event.setZ(0.0);
             } else if (forward != 0.0 && strafe != 0.0) {
                 forward *= Math.sin(0.7853981633974483);
                 strafe *= Math.cos(0.7853981633974483);
@@ -108,6 +108,7 @@ public class Strafe extends Mode {
 
             event.setX((forward * moveSpeed * -Math.sin(Math.toRadians(yaw)) + strafe * moveSpeed * Math.cos(Math.toRadians(yaw))) * 0.99);
             event.setZ((forward * moveSpeed * Math.cos(Math.toRadians(yaw)) - strafe * moveSpeed * -Math.sin(Math.toRadians(yaw))) * 0.99);
+
             ++stage;
         }
     }

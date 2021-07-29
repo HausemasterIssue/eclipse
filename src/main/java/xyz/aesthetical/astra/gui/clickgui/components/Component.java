@@ -80,4 +80,8 @@ public class Component {
     public void playClickSound(float pitch) {
         Astra.mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, pitch));
     }
+
+    public boolean isVisible() {
+        return true;
+    }
 }

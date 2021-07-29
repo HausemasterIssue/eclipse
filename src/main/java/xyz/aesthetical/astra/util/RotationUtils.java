@@ -10,10 +10,8 @@ import xyz.aesthetical.astra.Astra;
 
 public class RotationUtils {
     public static void rotate(BlockPos pos, boolean packet) {
-        float prevPitch = Astra.mc.player.rotationPitch,
-                prevYaw = Astra.mc.player.rotationYaw,
-                prevCamPitch = Astra.mc.player.cameraPitch,
-                prevCamYaw = Astra.mc.player.cameraYaw;
+        float prevPitch = Astra.mc.player.rotationPitch;
+        float prevYaw = Astra.mc.player.rotationYaw;
 
         EntityPlayer player = Astra.mc.player;
 
@@ -28,23 +26,17 @@ public class RotationUtils {
 
         if (packet) {
             Astra.mc.player.connection.sendPacket(new CPacketPlayer.Rotation(yaw, pitch, Astra.mc.player.onGround));
-        } else {
-            Astra.mc.player.prevRotationPitch = yaw;
-            Astra.mc.player.prevRotationYaw = pitch;
-            Astra.mc.player.rotationYawHead = yaw;
-
-            Astra.mc.player.rotationYaw = prevYaw;
-            Astra.mc.player.rotationPitch = prevPitch;
-            Astra.mc.player.cameraPitch = prevCamPitch;
-            Astra.mc.player.cameraYaw = prevCamYaw;
         }
+
+        Astra.mc.player.rotationYaw = yaw;
+        Astra.mc.player.rotationPitch = pitch;
+        Astra.mc.player.rotationYaw = prevYaw;
+        Astra.mc.player.rotationPitch = prevPitch;
     }
 
     public static void rotate(Entity entity, boolean packet) {
-        float prevPitch = Astra.mc.player.rotationPitch,
-                prevYaw = Astra.mc.player.rotationYaw,
-                prevCamPitch = Astra.mc.player.cameraPitch,
-                prevCamYaw = Astra.mc.player.cameraYaw;
+        float prevPitch = Astra.mc.player.rotationPitch;
+        float prevYaw = Astra.mc.player.rotationYaw;
 
         EntityPlayer player = Astra.mc.player;
 
@@ -59,16 +51,12 @@ public class RotationUtils {
 
         if (packet) {
             Astra.mc.player.connection.sendPacket(new CPacketPlayer.Rotation(yaw, pitch, Astra.mc.player.onGround));
-        } else {
-            Astra.mc.player.prevRotationPitch = yaw;
-            Astra.mc.player.prevRotationYaw = pitch;
-            Astra.mc.player.rotationYawHead = yaw;
-
-            Astra.mc.player.rotationYaw = prevYaw;
-            Astra.mc.player.rotationPitch = prevPitch;
-            Astra.mc.player.cameraPitch = prevCamPitch;
-            Astra.mc.player.cameraYaw = prevCamYaw;
         }
+
+        Astra.mc.player.rotationYaw = yaw;
+        Astra.mc.player.rotationPitch = pitch;
+        Astra.mc.player.rotationYaw = prevYaw;
+        Astra.mc.player.rotationPitch = prevPitch;
     }
 
     public static Pair<Double, Double> getDirectionalSpeed(double speed) {

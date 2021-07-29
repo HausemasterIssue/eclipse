@@ -18,6 +18,16 @@ public class FriendManager {
         return friends.stream().anyMatch(friend -> friend.getUuid().equals(uuid));
     }
 
+    public Friend getFriend(UUID uuid) {
+        for (Friend friend : friends) {
+            if (friend.getUuid().equals(uuid)) {
+                return friend;
+            }
+        }
+
+        return null;
+    }
+
     public ArrayList<Friend> getFriends() {
         return friends;
     }

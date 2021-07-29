@@ -1,8 +1,6 @@
 package xyz.aesthetical.astra.util;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityEnderCrystal;
 import net.minecraft.init.Blocks;
@@ -13,6 +11,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import xyz.aesthetical.astra.Astra;
 
@@ -103,14 +102,16 @@ public class WorldUtils {
 
     public static EnumActionResult place(BlockPos pos, EnumHand hand, boolean swing, boolean sneak) {
         EnumFacing facing = getFacing(pos);
-        Vec3d hitVector = new Vec3d(pos.add(facing.getDirectionVec())).scale(0.5);
+        Vec3d hitVector = new Vec3d(pos.offset(facing))
+                .add(0.5, 0.5, 0.5)
+                .add(new Vec3d(facing.getOpposite().getDirectionVec()).scale(0.5));
 
         if (sneak && !Astra.mc.player.isSneaking()) {
             Astra.mc.player.setSneaking(true);
             Astra.mc.player.connection.sendPacket(new CPacketEntityAction(Astra.mc.player, CPacketEntityAction.Action.START_SNEAKING));
         }
 
-        EnumActionResult result = Astra.mc.playerController.processRightClickBlock(Astra.mc.player, Astra.mc.world, pos, facing, hitVector, hand);
+        EnumActionResult result = Astra.mc.playerController.processRightClickBlock(Astra.mc.player, Astra.mc.world, pos, facing.getOpposite(), hitVector, hand);
 
         if (swing) {
             swingArm(hand);
@@ -120,20 +121,29 @@ public class WorldUtils {
     }
 
     public static EnumFacing getFacing(BlockPos pos) {
-        for (EnumFacing direction : EnumFacing.values()) {
-            BlockPos neighbor = pos.offset(direction);
-            EnumFacing side = direction.getOpposite();
+        for (EnumFacing facing : EnumFacing.values()) {
+            Vec3d playerPos = Astra.mc.player.getPositionVector();
+            RayTraceResult result = Astra.mc.world.rayTraceBlocks(
+                    playerPos.add(0.0, Astra.mc.player.getEyeHeight(), 0.0),
+                    new Vec3d(
+                            pos.getX() + 0.5 + facing.getDirectionVec().getX() * 1.0 / 2.0,
+                            pos.getY() + 0.5 + facing.getDirectionVec().getY() * 1.0 / 2.0,
+                            pos.getZ() + 0.5 + facing.getDirectionVec().getZ() * 1.0 / 2.0
+                    ),
+                    false,
+                    true,
+                    false
+            );
 
-            IBlockState state = Astra.mc.world.getBlockState(neighbor);
-            if (state.getBlock() == Blocks.AIR || state.getMaterial().isReplaceable()) {
+            if (result != null && (result.typeOfHit != RayTraceResult.Type.BLOCK || !result.getBlockPos().equals(pos))) {
                 continue;
             }
 
-            if (state.getMaterial() == Material.WATER || state.getMaterial() == Material.WATER) {
-                continue;
-            }
+            return facing;
+        }
 
-            return side;
+        if (pos.getY() > Astra.mc.player.posY + Astra.mc.player.getEyeHeight()) {
+            return EnumFacing.DOWN;
         }
 
         return EnumFacing.UP;

@@ -8,9 +8,9 @@ import xyz.aesthetical.astra.events.input.MouseEvent;
 import xyz.aesthetical.astra.managers.modules.Module;
 import xyz.aesthetical.astra.util.InventoryUtils;
 
-@Module.Mod(name = "MiddleClickPearl", description = "Throws an ender pearl on a middle click")
+@Module.Mod(name = "MCP", description = "Throws an ender pearl on a middle click")
 @Module.Info(category = Module.Category.MISCELLANEOUS)
-public class MiddleClickPearl extends Module {
+public class MCP extends Module {
     @SubscribeEvent
     public void onMouseClick(MouseEvent event) {
         if (event.getButton() == MouseEvent.Button.MIDDLE) {

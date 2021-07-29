@@ -63,17 +63,21 @@ public class ModuleManager {
         modules.add(new XCarry());
 
         // misc
+        modules.add(new AutoEat());
         modules.add(new AutoReconnect());
         modules.add(new AutoRespawn());
-        // modules.add(new AutoSalC1Dupe());
         modules.add(new AutoTunnel());
         modules.add(new Avoid());
+        modules.add(new Chat());
         modules.add(new FakePlayer());
         modules.add(new FastUse());
+        modules.add(new Freecam());
         modules.add(new LiquidInteract());
-        modules.add(new MiddleClickPearl());
+        modules.add(new MCF());
+        modules.add(new MCP());
         modules.add(new NoRotate());
         modules.add(new NoSwing());
+        modules.add(new PearlNotifier());
         modules.add(new PortalModifier());
         modules.add(new Time());
         modules.add(new VisualRange());
@@ -86,7 +90,9 @@ public class ModuleManager {
         modules.add(new Jesus());
         modules.add(new NoFall());
         modules.add(new NoSlow());
+        modules.add(new Parkour());
         modules.add(new ReverseStep());
+        modules.add(new SafeWalk());
         modules.add(new Scaffold());
         modules.add(new Speed());
         modules.add(new Sprint());
@@ -97,7 +103,6 @@ public class ModuleManager {
         modules.add(new Brightness());
         modules.add(new ViewClip());
         modules.add(new Chams());
-        // @todo modules.add(new CityESP());
         modules.add(new CustomFOV());
         modules.add(new ESP());
         modules.add(new HoleESP());

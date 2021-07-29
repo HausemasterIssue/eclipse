@@ -61,4 +61,9 @@ public class Slider extends Component {
     private float partialMultiplier() {
         return part() / difference;
     }
+
+    @Override
+    public boolean isVisible() {
+        return setting.isVisible();
+    }
 }
