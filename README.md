@@ -1,2 +1,4 @@
 # eclipse
-Eclipse (or AesthetiHack) is a Utility Mod for 1.12.2, 1.16.5, and 1.17
+ues
+
+look at branches, theres only code on the 1.12.2 branch, soon 1.16.5 if i ever fucking commit
