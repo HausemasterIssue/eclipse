@@ -7,6 +7,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import xyz.aesthetical.astra.Astra;
 import xyz.aesthetical.astra.events.entity.MoveEvent;
 import xyz.aesthetical.astra.events.entity.MoveUpdateEvent;
+import xyz.aesthetical.astra.features.modules.miscellaneous.Freecam;
 import xyz.aesthetical.astra.features.settings.NumberSetting;
 import xyz.aesthetical.astra.managers.modules.Mode;
 import xyz.aesthetical.astra.managers.modules.Module;
@@ -50,7 +51,7 @@ public class Strafe extends Mode {
 
     @SubscribeEvent
     public void onMove(MoveEvent event) {
-        if (Module.fullNullCheck()) {
+        if (Module.fullNullCheck() && !Astra.moduleManager.getModule(Freecam.class).isToggled()) {
             if (Astra.mc.player.onGround) {
                 stage = 2;
             }

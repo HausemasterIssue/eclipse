@@ -2,6 +2,7 @@ package xyz.aesthetical.astra.features.modules.movement;
 
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import xyz.aesthetical.astra.Astra;
 import xyz.aesthetical.astra.features.settings.Setting;
 import xyz.aesthetical.astra.managers.modules.Module;
 
@@ -18,7 +19,7 @@ public class EntityControl extends Module {
 
     @SubscribeEvent
     public void onUpdate(LivingEvent.LivingUpdateEvent event) {
-        if (Module.fullNullCheck() && maxHorseJumpPower.getValue()) {
+        if (Module.fullNullCheck() && event.getEntityLiving() == Astra.mc.player && maxHorseJumpPower.getValue()) {
             // @todo - look at EntityPlayerSP (horseJumpPower = 1.0f && horseJumpPowerCounter = -10)
         }
     }

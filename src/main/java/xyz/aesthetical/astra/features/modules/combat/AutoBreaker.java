@@ -35,6 +35,15 @@ public class AutoBreaker extends Module {
         isBreaking = false;
     }
 
+    @Override
+    public String getDisplay() {
+        if (breakPos != null) {
+            return breakPos.getX() + ", " + breakPos.getY() + ", " + breakPos.getZ();
+        }
+
+        return super.getDisplay();
+    }
+
     @SubscribeEvent
     public void onUpdate(LivingEvent.LivingUpdateEvent event) {
         if (Module.fullNullCheck() && event.getEntityLiving() == Astra.mc.player) {

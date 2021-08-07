@@ -24,6 +24,7 @@ public class EnumSelection extends Component {
         super.mouseClicked(mouseX, mouseY, button);
 
         if (isMouseInBounds(mouseX, mouseY) && button == 0) {
+            playClickSound(1.0f);
             setting.setValue(EnumConverter.increaseEnum(setting.getValue()));
         }
     }

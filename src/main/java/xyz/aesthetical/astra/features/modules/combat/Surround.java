@@ -10,6 +10,7 @@ import xyz.aesthetical.astra.features.settings.NumberSetting;
 import xyz.aesthetical.astra.features.settings.Setting;
 import xyz.aesthetical.astra.managers.HoleManager;
 import xyz.aesthetical.astra.managers.modules.Module;
+import xyz.aesthetical.astra.util.InventoryUtils;
 import xyz.aesthetical.astra.util.RotationUtils;
 import xyz.aesthetical.astra.util.WorldUtils;
 
@@ -23,6 +24,8 @@ public class Surround extends Module {
     public final Setting<Boolean> rotate = register(new Setting<>("Rotate", true).setDescription("If to send rotation packets when placing the blocks"));
     public final NumberSetting rotationPackets = register(new NumberSetting("Rotation Packets", 2).setMin(0).setMax(10).setDescription("How many rotation packets to send"));
     public final Setting<Boolean> swing = register(new Setting<>("Swing", true).setDescription("If to swing your arm client side"));
+    public final Setting<Boolean> silent = register(new Setting<>("Slient Switch", true).setDescription("If to silently switch to obsidian"));
+    public final Setting<Boolean> sync = register(new Setting<>("Sync", false).setDescription("If to sync with the server by sending packets"));
 
     @Override
     public void onEnabled() {
@@ -37,8 +40,7 @@ public class Surround extends Module {
             for (int i = 0; i < 9; ++i) {
                 ItemStack stack = Astra.mc.player.inventory.getStackInSlot(i);
                 if (!stack.isEmpty() && stack.getItem() instanceof ItemBlock && ((ItemBlock) stack.getItem()).getBlock() == Blocks.OBSIDIAN) {
-                    oldSlot = Astra.mc.player.inventory.currentItem;
-                    Astra.mc.player.inventory.currentItem = i;
+                    oldSlot = InventoryUtils.switchTo(i, silent.getValue());
                     break;
                 }
             }
@@ -67,7 +69,7 @@ public class Surround extends Module {
                 }
             }
 
-            WorldUtils.place(pos, hand, swing.getValue(), true);
+            WorldUtils.place(pos, hand, swing.getValue(), true, sync.getValue());
         }
 
         Astra.mc.player.inventory.currentItem = oldSlot;

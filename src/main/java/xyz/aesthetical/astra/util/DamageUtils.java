@@ -14,18 +14,10 @@ import xyz.aesthetical.astra.Astra;
 public class DamageUtils {
     public static float calculateDamage(double x, double y, double z, EntityPlayer target) {
         return calculateDamage(x, y, z, 6.0f, false, target);
-//        double doublePower = 12; // 6 is power of end crystals, so 6*2 = 12
-//        double distancedSize = target.getDistanceSq(x, y, z) / doublePower;
-//        double blast = target.world.getBlockDensity(new Vec3d(x, y, z), target.getEntityBoundingBox());
-//
-//        double impact = (1.0 - distancedSize) * blast;
-//        float damage = (float) ((impact * impact + impact) / 2.0f * 7.0f * doublePower + 1.0);
-//
-//        return getBlastReduction(target, getDamageMultiplier(damage), new Explosion(target.world, target, x, y, z, ((float) doublePower) / 2.0f, false, true));
     }
 
     public static float calculateDamage(double x, double y, double z, float power, boolean causesFire, EntityPlayer target) {
-        float doublePower = power * 2;
+        float doublePower = power * 2.0f;
         double distancedSize = target.getDistanceSq(x, y, z) / doublePower;
         double blast = target.world.getBlockDensity(new Vec3d(x, y, z), target.getEntityBoundingBox());
 
@@ -39,10 +31,13 @@ public class DamageUtils {
         DamageSource src = DamageSource.causeExplosionDamage(explosion);
         damage = CombatRules.getDamageAfterAbsorb(damage, target.getTotalArmorValue(), (float) target.getEntityAttribute(SharedMonsterAttributes.ARMOR_TOUGHNESS).getAttributeValue());
 
-        int enchantModifier = EnchantmentHelper.getEnchantmentModifierDamage(target.getArmorInventoryList(), src);
-        float f = MathHelper.clamp(enchantModifier, 0.0f, 20.0f);
+        int enchantModifier = 0;
+        try {
+            enchantModifier = EnchantmentHelper.getEnchantmentModifierDamage(target.getArmorInventoryList(), src);
+        } catch (NullPointerException ignored) { }
 
-        damage *= 1.0f - f / 25.0f;
+        float eof = MathHelper.clamp(enchantModifier, 0.0f, 20.0f);
+        damage *= 1.0f - eof / 25.0f;
 
         if (target.isPotionActive(MobEffects.RESISTANCE)) {
             damage -= damage / 4.0f;

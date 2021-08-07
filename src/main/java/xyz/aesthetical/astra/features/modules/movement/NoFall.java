@@ -12,12 +12,18 @@ import xyz.aesthetical.astra.Astra;
 import xyz.aesthetical.astra.features.settings.NumberSetting;
 import xyz.aesthetical.astra.features.settings.Setting;
 import xyz.aesthetical.astra.managers.modules.Module;
+import xyz.aesthetical.astra.util.EnumConverter;
 
 @Module.Mod(name = "NoFall", description = "Stops you from taking fall damage")
 @Module.Info(category = Module.Category.MOVEMENT)
 public class NoFall extends Module {
     public final Setting<Mode> mode = register(new Setting<>("Mode", Mode.PACKET).setDescription("How to negate fall distance"));
     public final NumberSetting distance = register(new NumberSetting("Fall Distance", 3.0f).setMin(0.0f).setMax(255.0f).setDescription("How far you can fall before doing anything"));
+
+    @Override
+    public String getDisplay() {
+        return EnumConverter.getActualName(mode.getValue());
+    }
 
     @SubscribeEvent
     public void onUpdate(LivingEvent.LivingUpdateEvent event) {

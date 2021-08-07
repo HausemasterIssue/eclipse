@@ -12,7 +12,7 @@ import xyz.aesthetical.astra.Astra;
 import xyz.aesthetical.astra.events.render.RenderEvent;
 import xyz.aesthetical.astra.features.settings.NumberSetting;
 import xyz.aesthetical.astra.managers.modules.Module;
-import xyz.aesthetical.astra.util.ColorUtil;
+import xyz.aesthetical.astra.util.ColorUtils;
 import xyz.aesthetical.astra.util.RenderUtils;
 import xyz.aesthetical.astra.util.Timer;
 import xyz.aesthetical.astra.util.WorldUtils;
@@ -117,7 +117,7 @@ public class Search extends Module {
         if (Module.fullNullCheck() && !positions.isEmpty() && !blocks.isEmpty()) {
             for (int i = 0; i < positions.size(); ++i) {
                 BlockPos pos = positions.get(i);
-                RenderUtils.drawFilledBox(new AxisAlignedBB(pos).offset(RenderUtils.getCameraPos()), ColorUtil.toRGBA(255, 255, 255, 80));
+                RenderUtils.drawFilledBox(new AxisAlignedBB(pos).offset(RenderUtils.getCameraPos()), ColorUtils.toRGBA(255, 255, 255, 80));
             }
         }
     }

@@ -27,6 +27,11 @@ public class FakePlayer extends Module {
 
     private EntityOtherPlayerMP fake = null;
 
+    @Override
+    public String getDisplay() {
+        return fake.getGameProfile().getName();
+    }
+
     @SubscribeEvent
     public void onWorldUnload(WorldEvent.Unload event) {
         fake = null;

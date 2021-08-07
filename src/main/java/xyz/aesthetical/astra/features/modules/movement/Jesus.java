@@ -13,6 +13,7 @@ import xyz.aesthetical.astra.events.world.blocks.LiquidCollisionEvent;
 import xyz.aesthetical.astra.features.settings.Setting;
 import xyz.aesthetical.astra.managers.modules.Module;
 import xyz.aesthetical.astra.mixin.mixins.network.packets.outbound.ICPacketPlayer;
+import xyz.aesthetical.astra.util.EnumConverter;
 
 @Module.Mod(name = "Jesus", description = "Becomes Jesus Christ and walk on liquids")
 @Module.Info(category = Module.Category.MOVEMENT)
@@ -28,6 +29,11 @@ public class Jesus extends Module {
     // @todo sneakSink
     public final Setting<Boolean> sneakSink = register(new Setting<>("Sneak Sink", true).setDescription("If to sink upon holding sneak"));
     public final Setting<Boolean> antiKick = register(new Setting<>("Anti-Kick", true).setDescription("If to attempt to stop getting kicked"));
+
+    @Override
+    public String getDisplay() {
+        return EnumConverter.getActualName(mode.getValue());
+    }
 
     @SubscribeEvent
     public void onPacketOutbound(PacketEvent.Outbound event) {

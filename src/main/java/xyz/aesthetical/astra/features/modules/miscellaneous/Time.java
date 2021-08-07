@@ -22,6 +22,11 @@ public class Time extends Module {
     }
 
     @Override
+    public String getDisplay() {
+        return String.valueOf(time.getValue());
+    }
+
+    @Override
     public void onDisabled() {
         if (Module.fullNullCheck()) {
             Astra.mc.world.setWorldTime(oldTime);

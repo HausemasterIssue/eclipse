@@ -9,6 +9,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import xyz.aesthetical.astra.Astra;
 import xyz.aesthetical.astra.features.settings.Setting;
 import xyz.aesthetical.astra.managers.modules.Module;
+import xyz.aesthetical.astra.util.EnumConverter;
 
 @Module.Mod(name = "AutoWalk", description = "Automatically walks")
 @Module.Info(category = Module.Category.MOVEMENT)
@@ -19,6 +20,11 @@ public class AutoWalk extends Module {
 
     public AutoWalk() {
         instance = this;
+    }
+
+    @Override
+    public String getDisplay() {
+        return EnumConverter.getActualName(mode.getValue());
     }
 
     @Override

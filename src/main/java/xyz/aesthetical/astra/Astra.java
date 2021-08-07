@@ -1,9 +1,11 @@
 package xyz.aesthetical.astra;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.SimpleReloadableResourceManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,6 +20,9 @@ import xyz.aesthetical.astra.managers.friends.FriendManager;
 import xyz.aesthetical.astra.managers.macros.MacroManager;
 import xyz.aesthetical.astra.managers.modules.ModuleManager;
 import xyz.aesthetical.astra.managers.notifications.NotificationManager;
+import xyz.aesthetical.astra.mixin.mixins.IMinecraft;
+import xyz.aesthetical.astra.util.blur.BlurHandler;
+import xyz.aesthetical.astra.util.blur.FakeBlurShaderPack;
 
 @Mod(modid = Astra.MOD_ID, name = Astra.MOD_NAME, version = Astra.MOD_VERSION)
 public class Astra {
@@ -41,6 +46,15 @@ public class Astra {
     public static FriendManager friendManager;
     public static MacroManager macroManager;
     public static XrayManager xrayManager;
+
+    @Mod.EventHandler
+    public void preInit(FMLPreInitializationEvent event) {
+        LOGGER.info("Adding fake blur texture pack for blur shaders...");
+        FakeBlurShaderPack pack = new FakeBlurShaderPack();
+        ((IMinecraft) Minecraft.getMinecraft()).getDefaultResourcePacks().add(pack);
+        ((SimpleReloadableResourceManager) Minecraft.getMinecraft().getResourceManager()).registerReloadListener(pack);
+        LOGGER.info("Added blur texture pack!");
+    }
 
     @Mod.EventHandler
     public void onInit(FMLInitializationEvent event) {
@@ -74,6 +88,7 @@ public class Astra {
         MinecraftForge.EVENT_BUS.register(serverManager);
         MinecraftForge.EVENT_BUS.register(holeManager);
         MinecraftForge.EVENT_BUS.register(notificationManager);
+        MinecraftForge.EVENT_BUS.register(new BlurHandler());
 
         LOGGER.info("Loaded and registered all listeners! Welcome to Astra Client :^)");
     }

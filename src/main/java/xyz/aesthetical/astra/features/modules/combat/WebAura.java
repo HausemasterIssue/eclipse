@@ -25,7 +25,9 @@ public class WebAura extends Module {
     public final Setting<Boolean> targetFriends = register(new Setting<>("Target Friends", false).setDescription("If to web friends"));
     public final Setting<Boolean> rotate = register(new Setting<>("Rotate", true).setDescription("If to send rotation packets"));
     public final Setting<Boolean> swing = register(new Setting<>("Swing", true).setDescription("If to swing client side"));
+    public final Setting<Boolean> sync = register(new Setting<>("Sync", false).setDescription("If to sync with the server by sending packets"));
     public final Setting<Boolean> toggleWhenFinished = register(new Setting<>("Toggle When Finished", true).setDescription("If to toggle once finished"));
+
 
     private EntityPlayer target = null;
     private EnumHand hand = EnumHand.MAIN_HAND;
@@ -71,7 +73,7 @@ public class WebAura extends Module {
             }
 
 
-            WorldUtils.place(new BlockPos(target.getPositionVector()), hand, swing.getValue(), true);
+            WorldUtils.place(new BlockPos(target.getPositionVector()), hand, swing.getValue(), true, sync.getValue());
 
             Astra.mc.player.inventory.currentItem = oldSlot;
             oldSlot = -1;

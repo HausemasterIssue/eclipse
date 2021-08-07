@@ -14,8 +14,9 @@ public class ClickGUI extends Module {
     public static ClickGUI instance;
 
     public final Setting<Boolean> pause = register(new Setting<>("Pause", false).setDescription("If the ClickGUI should pause the game."));
-    public final Setting<Boolean> outline = register(new Setting<>("Outline", false).setDescription("If to draw an outline around the containers").setGroup("outline"));
-    public final Setting<Color> outlineColor = register(new Setting<>("Outline Color", new Color(255, 255, 255, 255)).setDescription("The color to use in the outline").setGroup("outline"));
+    public final Setting<Boolean> outline = register(new Setting<>("Outline", false).setDescription("If to draw an outline around the containers"));
+    public final Setting<Color> outlineColor = register(new Setting<>("Outline Color", new Color(255, 255, 255, 255)).setDescription("The color to use in the outline").setVisibility((m) -> outline.getValue()));
+    public final Setting<Boolean> tooltips = register(new Setting<>("Tooltips", false).setDescription("If to show tooltips while hovering over modules/settings"));
 
     public ClickGUI() {
         instance = this;
@@ -28,5 +29,11 @@ public class ClickGUI extends Module {
         }
 
         toggle();
+    }
+
+    public enum Theme {
+        DEFAULT,
+        FUTURE,
+        AESTHETICAL
     }
 }

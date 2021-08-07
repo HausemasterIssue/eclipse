@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 @Module.Mod(name = "SelfTrap", description = "Traps you in an obsidian box")
 @Module.Info(category = Module.Category.COMBAT)
 public class SelfTrap extends Module {
-    private static final BlockPos[] TRAP_POSITIONS = new BlockPos[] {
+    public static final BlockPos[] TRAP_POSITIONS = new BlockPos[] {
             new BlockPos(-1, 0, 0),
             new BlockPos(-1, 1, 0),
             new BlockPos(1, 0, 0),
@@ -35,6 +35,7 @@ public class SelfTrap extends Module {
     public final Setting<Boolean> rotate = register(new Setting<>("Rotate", true).setDescription("If to send rotation packets when placing the blocks"));
     public final NumberSetting rotationPackets = register(new NumberSetting("Rotation Packets", 2).setMin(0).setMax(10).setDescription("How many rotation packets to send"));
     public final Setting<Boolean> swing = register(new Setting<>("Swing", true).setDescription("If to swing your arm client side"));
+    public final Setting<Boolean> sync = register(new Setting<>("Sync", false).setDescription("If to sync with the server by sending packets"));
 
     @Override
     public void onEnabled() {
@@ -79,7 +80,7 @@ public class SelfTrap extends Module {
                 }
             }
 
-            WorldUtils.place(pos, hand, swing.getValue(), true);
+            WorldUtils.place(pos, hand, swing.getValue(), true, sync.getValue());
         }
 
         Astra.mc.player.inventory.currentItem = oldSlot;

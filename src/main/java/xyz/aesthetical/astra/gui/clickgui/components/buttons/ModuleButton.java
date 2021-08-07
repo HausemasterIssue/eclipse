@@ -7,7 +7,7 @@ import xyz.aesthetical.astra.gui.clickgui.components.Component;
 import xyz.aesthetical.astra.gui.clickgui.components.other.EnumSelection;
 import xyz.aesthetical.astra.gui.clickgui.components.other.Slider;
 import xyz.aesthetical.astra.managers.modules.Module;
-import xyz.aesthetical.astra.util.ColorUtil;
+import xyz.aesthetical.astra.util.ColorUtils;
 import xyz.aesthetical.astra.util.RenderUtils;
 
 import java.util.ArrayList;
@@ -44,7 +44,7 @@ public class ModuleButton extends Button {
         clicked = module.isToggled();
 
         if (clicked) {
-            RenderUtils.drawRect(x, y, width, height, ColorUtil.toRGBA(2, 112, 222, 255));
+            RenderUtils.drawRect(x, y, width, height, ColorUtils.toRGBA(2, 112, 222, 255));
         }
 
         Astra.textManager.draw(module.getName(), (float) (x + 2.3), toCenterHeight((float) y, (float) height), -1);

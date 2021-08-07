@@ -25,22 +25,21 @@ public class CustomFont {
     }
 
     protected DynamicTexture setupTexture(Font font, boolean antiAlias, boolean fractionalMetrics, CharData[] chars) {
-        BufferedImage img = this.generateFontImage(font, antiAlias, fractionalMetrics, chars);
+        BufferedImage image = this.generateFontImage(font, antiAlias, fractionalMetrics, chars);
 
         try {
-            return new DynamicTexture(img);
+            return new DynamicTexture(image);
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
     }
 
-
     protected BufferedImage generateFontImage(Font font, boolean antiAlias, boolean fractionalMetrics, CharData[] chars) {
-        int imgSize = (int)this.imgSize;
+        int imgSize = (int) this.imgSize;
 
         BufferedImage bufferedImage = new BufferedImage(imgSize, imgSize, 2);
-        Graphics2D graphics = (Graphics2D)bufferedImage.getGraphics();
+        Graphics2D graphics = (Graphics2D) bufferedImage.getGraphics();
 
         graphics.setFont(font);
         graphics.setColor(new Color(255, 255, 255, 0));

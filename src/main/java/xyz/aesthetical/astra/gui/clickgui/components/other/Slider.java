@@ -4,7 +4,7 @@ import org.lwjgl.input.Mouse;
 import xyz.aesthetical.astra.Astra;
 import xyz.aesthetical.astra.features.settings.NumberSetting;
 import xyz.aesthetical.astra.gui.clickgui.components.Component;
-import xyz.aesthetical.astra.util.ColorUtil;
+import xyz.aesthetical.astra.util.ColorUtils;
 import xyz.aesthetical.astra.util.RenderUtils;
 
 public class Slider extends Component {
@@ -24,7 +24,7 @@ public class Slider extends Component {
             setValue(mouseX);
         }
 
-        RenderUtils.drawRect(x, y, setting.getValue().floatValue() <= setting.getMin().floatValue() ? 0.0f : width * partialMultiplier(), height, ColorUtil.toRGBA(2, 112, 222, 255));
+        RenderUtils.drawRect(x, y, setting.getValue().floatValue() <= setting.getMin().floatValue() ? 0.0f : width * partialMultiplier(), height, ColorUtils.toRGBA(2, 112, 222, 255));
         Astra.textManager.draw(setting.getName() + ": " + setting.getValue(), (float) (x) + 2.3f, toCenterHeight((float) y, (float) height), -1);
     }
 

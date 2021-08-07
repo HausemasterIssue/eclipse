@@ -6,11 +6,17 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import xyz.aesthetical.astra.Astra;
 import xyz.aesthetical.astra.features.settings.Setting;
 import xyz.aesthetical.astra.managers.modules.Module;
+import xyz.aesthetical.astra.util.EnumConverter;
 
 @Module.Mod(name = "Sprint", description = "Automatically sprints for you")
 @Module.Info(category = Module.Category.MOVEMENT)
 public class Sprint extends Module {
     public final Setting<Mode> mode = register(new Setting<>("Mode", Mode.VANILLA).setDescription("How to do the sprint"));
+
+    @Override
+    public String getDisplay() {
+        return EnumConverter.getActualName(mode.getValue());
+    }
 
     @SubscribeEvent
     public void onLivingUpdate(LivingEvent.LivingUpdateEvent event) {

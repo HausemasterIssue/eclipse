@@ -4,7 +4,7 @@ import xyz.aesthetical.astra.Astra;
 import xyz.aesthetical.astra.gui.clickgui.components.Component;
 import xyz.aesthetical.astra.gui.clickgui.components.buttons.Button;
 import xyz.aesthetical.astra.gui.hudeditor.HudElement;
-import xyz.aesthetical.astra.util.ColorUtil;
+import xyz.aesthetical.astra.util.ColorUtils;
 import xyz.aesthetical.astra.util.RenderUtils;
 
 import java.util.ArrayList;
@@ -25,7 +25,8 @@ public class ElementButton extends Button {
         clicked = element.isEnabled();
 
         if (clicked) {
-            RenderUtils.drawRect(x, y, width, height, ColorUtil.toRGBA(237, 47, 47, 255));
+            // 237, 47, 47
+            RenderUtils.drawRect(x, y, width, height, ColorUtils.toRGBA(2, 112, 222, 255));
         }
 
         Astra.textManager.draw(element.getName(), (float) (x + 2.3), toCenterHeight((float) y, (float) height), -1);

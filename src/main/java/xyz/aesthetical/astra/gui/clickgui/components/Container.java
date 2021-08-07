@@ -1,7 +1,7 @@
 package xyz.aesthetical.astra.gui.clickgui.components;
 
 import xyz.aesthetical.astra.Astra;
-import xyz.aesthetical.astra.util.ColorUtil;
+import xyz.aesthetical.astra.util.ColorUtils;
 import xyz.aesthetical.astra.util.RenderUtils;
 
 import java.util.ArrayList;
@@ -33,7 +33,7 @@ public class Container extends Component {
             y = y2 + mouseY;
         }
 
-        RenderUtils.drawRect(x, y, width, height, ColorUtil.toRGBA(71, 71, 71, 255));
+        RenderUtils.drawRect(x, y, width, height, ColorUtils.toRGBA(71, 71, 71, 255));
         Astra.textManager.draw(title, (float) (x + 2.3), toCenterHeight((float) y, (float) height), -1);
 
         if (expanded) {

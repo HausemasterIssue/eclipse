@@ -10,7 +10,7 @@ import xyz.aesthetical.astra.events.render.RenderEvent;
 import xyz.aesthetical.astra.features.settings.NumberSetting;
 import xyz.aesthetical.astra.features.settings.Setting;
 import xyz.aesthetical.astra.managers.modules.Module;
-import xyz.aesthetical.astra.util.ColorUtil;
+import xyz.aesthetical.astra.util.ColorUtils;
 import xyz.aesthetical.astra.util.EntityUtil;
 import xyz.aesthetical.astra.util.RenderUtils;
 
@@ -65,29 +65,29 @@ public class Tracers extends Module {
     private int getColor(Entity entity) {
         if (invisible.getValue() && entity.isInvisibleToPlayer(Astra.mc.player)) {
             Color color = invisibleColor.getValue();
-            return ColorUtil.toRGBA(color.getRed(), color.getGreen(), color.getBlue(), 255);
+            return ColorUtils.toRGBA(color.getRed(), color.getGreen(), color.getBlue(), 255);
         }
 
         if (entity instanceof EntityPlayer) {
             if (friends.getValue() && Astra.friendManager.isFriend(entity.getUniqueID())) {
                 Color color = friendColor.getValue();
-                return ColorUtil.toRGBA(color.getRed(), color.getGreen(), color.getBlue(), 255);
+                return ColorUtils.toRGBA(color.getRed(), color.getGreen(), color.getBlue(), 255);
             }
 
             if (players.getValue()) {
                 Color color = playerColor.getValue();
-                return ColorUtil.toRGBA(color.getRed(), color.getGreen(), color.getBlue(), 255);
+                return ColorUtils.toRGBA(color.getRed(), color.getGreen(), color.getBlue(), 255);
             }
         }
 
         if (hostile.getValue() && EntityUtil.isHostile(entity)) {
             Color color = hostileColor.getValue();
-            return ColorUtil.toRGBA(color.getRed(), color.getGreen(), color.getBlue(), 255);
+            return ColorUtils.toRGBA(color.getRed(), color.getGreen(), color.getBlue(), 255);
         }
 
         if (passive.getValue() && EntityUtil.isPassive(entity)) {
             Color color = passiveColor.getValue();
-            return ColorUtil.toRGBA(color.getRed(), color.getGreen(), color.getBlue(), 255);
+            return ColorUtils.toRGBA(color.getRed(), color.getGreen(), color.getBlue(), 255);
         }
 
         return -2;

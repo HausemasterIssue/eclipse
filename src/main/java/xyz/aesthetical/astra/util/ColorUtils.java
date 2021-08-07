@@ -1,6 +1,6 @@
 package xyz.aesthetical.astra.util;
 
-public class ColorUtil {
+public class ColorUtils {
     public static int toRGBA(int red, int green, int blue, int alpha) {
         return (red << 16) + (green << 8) + blue + (alpha << 24);
     }

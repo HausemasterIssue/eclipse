@@ -7,7 +7,7 @@ import xyz.aesthetical.astra.gui.hudeditor.HudElement;
 import java.awt.*;
 
 public class Watermark extends HudElement {
-    public final Setting<String> text = register(new Setting<>("Text", "Eclipse v" + Astra.MOD_VERSION).setDescription("What the watermark should show up as"));
+    public final Setting<String> text = register(new Setting<>("Text", Astra.MOD_NAME + " v" + Astra.MOD_VERSION).setDescription("What the watermark should show up as"));
     public final Setting<Color> textColor = register(new Setting<>("Text Color", new Color(255, 255, 255)).setDescription("The color to use in the text"));
 
     public Watermark() {

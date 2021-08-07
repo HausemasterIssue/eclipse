@@ -1,17 +1,26 @@
 package xyz.aesthetical.astra.mixin.mixins.render.entities;
 
+import com.google.common.base.Predicate;
+import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.client.resources.IResourceManagerReloadListener;
+import net.minecraft.entity.Entity;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.AxisAlignedBB;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import xyz.aesthetical.astra.features.modules.render.ViewClip;
+import xyz.aesthetical.astra.features.modules.exploits.GhostHand;
 import xyz.aesthetical.astra.features.modules.render.NoRender;
+import xyz.aesthetical.astra.features.modules.render.ViewClip;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Mixin(EntityRenderer.class)
 public abstract class MixinEntityRenderer implements IResourceManagerReloadListener {
@@ -61,5 +70,15 @@ public abstract class MixinEntityRenderer implements IResourceManagerReloadListe
     @ModifyVariable(method = "orientCamera", at = @At("STORE"), ordinal = 7, require = 1)
     private double postOrientCamera(double range) {
         return ViewClip.instance.isToggled() ? ViewClip.instance.range.getValue().floatValue() : range;
+    }
+
+    // https://github.com/Elementars/Xulu-v1.5.2/blob/d2d1e1c5679f0815fc921377be6bba4699c4b566/xuluv1.5.2/com/elementars/eclient/mixin/mixins/MixinEntityRenderer.java#L49#L55
+    @Redirect(method = "getMouseOver", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/WorldClient;getEntitiesInAABBexcluding(Lnet/minecraft/entity/Entity;Lnet/minecraft/util/math/AxisAlignedBB;Lcom/google/common/base/Predicate;)Ljava/util/List;"))
+    public List hookMouseOver(WorldClient client, Entity entity, AxisAlignedBB box, Predicate predicate) {
+        if (GhostHand.instance.isToggled() && GhostHand.instance.shouldBlock()) {
+            return new ArrayList<>();
+        }
+
+        return client.getEntitiesInAABBexcluding(entity, box, predicate);
     }
 }

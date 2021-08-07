@@ -1,15 +1,15 @@
 package xyz.aesthetical.astra.features.modules.combat;
 
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.item.EntityEnderCrystal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
-import net.minecraft.init.MobEffects;
-import net.minecraft.item.ItemAxe;
-import net.minecraft.item.ItemSword;
+import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.client.CPacketUseEntity;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import xyz.aesthetical.astra.Astra;
@@ -17,14 +17,13 @@ import xyz.aesthetical.astra.events.entity.TotemPopEvent;
 import xyz.aesthetical.astra.events.render.RenderEvent;
 import xyz.aesthetical.astra.features.settings.NumberSetting;
 import xyz.aesthetical.astra.features.settings.Setting;
-import xyz.aesthetical.astra.managers.friends.Friend;
+import xyz.aesthetical.astra.managers.commands.text.ChatColor;
 import xyz.aesthetical.astra.managers.modules.Module;
 import xyz.aesthetical.astra.util.*;
-import xyz.aesthetical.astra.util.Timer;
 
 import java.awt.*;
-import java.util.*;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Module.Mod(name = "CrystalAura", description = "Automatically places and detonates end crystals")
@@ -37,6 +36,7 @@ public class CrystalAura extends Module {
     public final NumberSetting targetRange = register(new NumberSetting("Target Range", 5.0f).setMin(2.0f).setMax(7.0f).setDescription("The range to find a target").setVisibility((m) -> menu.getValue() == Menu.TARGET));
     public final Setting<Boolean> antiNaked = register(new Setting<>("AntiNaked", true).setDescription("If to not target naked players to save crystals").setVisibility((m) -> menu.getValue() == Menu.TARGET));
     public final Setting<Boolean> invisible = register(new Setting<>("Invisible", true).setDescription("If to target invisible players").setVisibility((m) -> menu.getValue() == Menu.TARGET));
+    public final Setting<Boolean> targetFriends = register(new Setting<>("Target Friends", false).setDescription("If to target friends"));
 
     // place settings
     public final Setting<Boolean> placeCrystals = register(new Setting<>("Place", true).setDescription("If to automatically place crystals").setVisibility((m) -> menu.getValue() == Menu.PLACE));
@@ -47,7 +47,6 @@ public class CrystalAura extends Module {
     public final Setting<Boolean> oneDotThirteen = register(new Setting<>("1.13", false).setDescription("If 1.13 placement of crystals is allowed").setVisibility((m) -> menu.getValue() == Menu.PLACE && placeCrystals.getValue()));
     public final Setting<Boolean> placeSwing = register(new Setting<>("Place Swing", true).setDescription("If to swing client side").setVisibility((m) -> menu.getValue() == Menu.PLACE && placeCrystals.getValue()));
     public final Setting<Rotation> placeRotation = register(new Setting<>("Place Rotation", Rotation.HEAD).setDescription("How to rotate yourself to place the crystal").setVisibility((m) -> menu.getValue() == Menu.PLACE && placeCrystals.getValue()));
-    // @todo public final Setting<Boolean> raytrace = register(new Setting<>("Raytracing", false).setDescription("WIP - not done").setVisibility((m) -> menu.getValue() == Menu.PLACE && placeCrystals.getValue()));
     public final Setting<Boolean> multiPop = register(new Setting<>("Multi Pop", false).setDescription("If to find chain pops").setVisibility((m) -> menu.getValue() == Menu.PLACE && placeCrystals.getValue()));
     public final NumberSetting multiPopDelay = register(new NumberSetting("Multi Pop Delay", 115.0f).setMin(0.0f).setMax(2000.0f).setDescription("How long to wait in MS before attempting to multi pop").setVisibility((m) -> menu.getValue() == Menu.PLACE && placeCrystals.getValue() && multiPop.getValue()));
     public final NumberSetting multiPopDamage = register(new NumberSetting("Multi Pop Damage", 5.0f).setMin(1.0f).setMax(36.0f).setDescription("The minimum amount of damage the multi pop has to do").setVisibility((m) -> menu.getValue() == Menu.PLACE && placeCrystals.getValue() && multiPop.getValue()));
@@ -73,12 +72,13 @@ public class CrystalAura extends Module {
     public final Setting<Color> renderMultiPopColor = register(new Setting<>("Place Pos Color", new Color(0, 255, 0)).setDescription("The color to render the multi pop pos").setVisibility((m) -> menu.getValue() == Menu.RENDER && renderPlacePos.getValue() && renderMultiPop.getValue()));
     public final Setting<Boolean> renderDamage = register(new Setting<>("Render Damage", true).setDescription("If to render the current damage").setVisibility((m) -> menu.getValue() == Menu.RENDER));
 
-
     // keep track of shit
     private EntityPlayer target = null;
     private BlockPos currentPos = null;
     private float currentDamage = 0.0f;
-    private EnumHand crystalHand = EnumHand.MAIN_HAND;
+    private EnumHand hand = EnumHand.MAIN_HAND;
+
+    // queues and whatever, i'll get to this whenever
 
     // multi pop
     private boolean canMultiPop = false;
@@ -86,9 +86,6 @@ public class CrystalAura extends Module {
 
     private final Timer placeTimer = new Timer();
     private final Timer breakTimer = new Timer();
-
-    // antiweakness
-    private int slotBeforeTool = -1;
 
     @Override
     public String getDisplay() {
@@ -114,11 +111,14 @@ public class CrystalAura extends Module {
         if (Module.fullNullCheck() && currentPos != null) {
             if (renderPlacePos.getValue()) {
                 Color c = renderMultiPop.getValue() && canMultiPop ? renderMultiPopColor.getValue() : renderPlacePosColor.getValue();
-                RenderUtils.drawFilledBox(new AxisAlignedBB(currentPos).offset(RenderUtils.getCameraPos()), ColorUtil.toRGBA(c.getRed(), c.getGreen(), c.getBlue(), 80));
+                RenderUtils.drawFilledBox(new AxisAlignedBB(currentPos).offset(RenderUtils.getCameraPos()), ColorUtils.toRGBA(c.getRed(), c.getGreen(), c.getBlue(), 80));
             }
 
             if (renderDamage.getValue()) {
-                // do a text render shitter thing
+                GlStateManager.pushMatrix();
+                Vec3d interpolated = RenderUtils.interpolateVec(new Vec3d(currentPos.getX(), currentPos.getY(), currentPos.getZ())).add(RenderUtils.getCameraPos());
+                RenderUtils.drawTag(new BlockPos(interpolated.x, interpolated.y, interpolated.z), String.format("%.3f%n", currentDamage), 0.0, 0.0f);
+                GlStateManager.popMatrix();
             }
         }
     }
@@ -132,242 +132,183 @@ public class CrystalAura extends Module {
 
     @SubscribeEvent
     public void onUpdate(LivingEvent.LivingUpdateEvent event) {
-        if (Module.fullNullCheck() && event.getEntityLiving() == Astra.mc.player) {
-            // check for a target
-            if (target == null || !isValidCurrentTarget()) {
-                EntityPlayer possibleNewTarget = findTarget();
-                // if none, return
-                if (possibleNewTarget == null) {
+        if (Module.fullNullCheck() && event.getEntityLiving() == Astra.mc.player && !shouldPause()) {
+            // find a target
+            if (target == null || isValidCurrentTarget()) {
+                target = findTarget();
+                if (target == null) {
                     return;
                 }
-
-                target = possibleNewTarget;
             }
 
-            if (!Astra.mc.player.getHeldItemOffhand().isEmpty() && Astra.mc.player.getHeldItemOffhand().getItem() == Items.END_CRYSTAL) {
-                crystalHand = EnumHand.OFF_HAND;
-            } else {
-                int slot = InventoryUtils.switchInHotbar(Items.END_CRYSTAL);
-                if (slot == -1) {
-                    return;
-                }
-
-                crystalHand = EnumHand.MAIN_HAND;
+            // if no crystals were found
+            if (!crystalCheck()) {
+                return;
             }
 
-            if (multiplace.getValue()) {
-                doMultiPlace();
-            } else {
-                if (placeCrystals.getValue() && currentPos == null) {
-                    calculateSinglePlace();
-
-                    if (!placeTimer.passedMs(placeDelay.getValue().longValue())) {
-                        return;
-                    }
-
-                    if (currentPos == null) {
-                        placeTimer.reset();
-                        currentDamage = 0.0f;
-                        return;
-                    }
-
-                    placeTimer.reset();
-
-                    if (placeRotation.getValue() != Rotation.NONE && currentPos != null) {
-                        RotationUtils.rotate(currentPos, true);
-                    }
-
-                    placeCrystal(currentPos);
-                }
-
-                if (breakCrystals.getValue()) {
-                    if (Astra.mc.player.isPotionActive(MobEffects.WEAKNESS) && antiWeakness.getValue()) {
-                        doAntiWeakness();
-                    }
-
-                    if (!breakTimer.passedMs(breakDelay.getValue().longValue())) {
-                        return;
-                    }
-
-                    breakTimer.reset();
-                    hitCrystals();
-
-                    if (slotBeforeTool != -1 && antiWeakness.getValue()) {
-                        Astra.mc.player.inventory.currentItem = slotBeforeTool;
-                        slotBeforeTool = -1;
-                    }
-                }
-
-                currentPos = null;
-                currentDamage = 0.0f;
-            }
+            doCrystalAura();
         }
     }
 
-    private void placeCrystal(BlockPos pos) {
-        if (placeSwing.getValue()) {
-            WorldUtils.swingArm(crystalHand);
+    private void doCrystalAura() {
+        // @todo multiplace, we'll deal with single place right now
+        if (placeCrystals.getValue()) {
+            calculate(); // do calculations
+            if (currentPos != null && currentDamage != 0.0f) {
+                if (!placeTimer.passedMs(placeDelay.getValue().longValue())) {
+                    // @todo queue the pos
+                    return;
+                }
+
+                placeTimer.reset();
+
+                doPlace(currentPos);
+            }
         }
 
-        WorldUtils.place(pos, crystalHand, placeSwing.getValue(), false);
-    }
+        if (breakCrystals.getValue()) {
+            if (!breakTimer.passedMs(breakDelay.getValue().longValue())) {
+                // @todo queue the crystal
+                return;
+            }
 
-    private void hitCrystals() {
-        List<EntityEnderCrystal> enderCrystals = mapOutCrystals();
-        if (!enderCrystals.isEmpty()) {
-            // time to go
-            loop: for (EntityEnderCrystal crystal : enderCrystals) {
+            breakTimer.reset();
+
+            // @todo we should have a setting if they should "Always" break or Calc break. kinda how phobos does
+            // for now we'll check if the current pos can be used to break that single crystal
+
+            for (EntityEnderCrystal crystal : getSurroundingCrystals()) {
                 if (extraCalculate.getValue()) {
-                    BlockPos pos = crystal.getPosition();
-
-                    float selfDamage = DamageUtils.calculateDamage(pos.getX() + 0.5, pos.getY() + 1.0, pos.getZ() + 0.5, Astra.mc.player);
-                    if (antiSuicide.getValue()) {
-                        if (selfDamage - 0.5f >= maxSelfDamage.getValue().floatValue() || DamageUtils.willPopTotem(Astra.mc.player, selfDamage - 0.5f)) {
-                            continue;
-                        }
-                    }
-
-                    float targetDamage = DamageUtils.calculateDamage(pos.getX() + 0.5, pos.getY() + 1.0, pos.getZ() + 0.5, target);
-                    if (selfDamage >= targetDamage || targetDamage < minDamage.getValue().floatValue()) {
-                        continue;
-                    }
-
-                    if (antiFriendPop.getValue()) {
-                        for (Friend friend : Astra.friendManager.getFriends()) {
-                            EntityPlayer friendPlayer = Astra.serverManager.getPlayer(friend.getUuid());
-                            if (friendPlayer == null) {
-                                continue;
-                            }
-
-                            float friendDamage = DamageUtils.calculateDamage(pos.getX() + 0.5, pos.getY() + 1.0, pos.getZ() + 0.5, Astra.mc.player);
-                            if (friendDamage >= targetDamage || friendDamage >= EntityUtil.getTotalHealth(friendPlayer) || DamageUtils.willPopTotem(friendPlayer, friendDamage)) {
-                                continue loop;
-                            }
-                        }
-                    }
+                    // @todo
                 }
 
-                if (breakRotation.getValue() != Rotation.NONE) {
-                    RotationUtils.rotate(crystal.getPosition().add(0, 0.5, 0), true);
-                }
-
-                if (sync.getValue()) {
-                    Astra.mc.player.connection.sendPacket(new CPacketUseEntity(crystal));
-                } else {
-                    Astra.mc.playerController.attackEntity(Astra.mc.player, crystal);
-                }
-
-                if (breakSwing.getValue()) {
-                    WorldUtils.swingArm(EnumHand.MAIN_HAND);
-                }
+                // @todo shouldn't do the below
+                doBreak(crystal);
             }
         }
     }
 
-    private void doMultiPlace() {
-        // @todo
-    }
+    private void calculate() {
+        // get all possible place positions
+        final List<BlockPos> placePositions = WorldUtils.getCrystalPlacePositions(Astra.mc.player.getPositionVector(), placeRange.getValue().intValue(), oneDotThirteen.getValue());
 
-    private void calculateSinglePlace() {
-        ArrayList<Pair<BlockPos, Float>> positions = new ArrayList<>();
-        List<BlockPos> crystalPlacePositions = WorldUtils.getCrystalPlacePositions(Astra.mc.player.getPositionVector(), placeRange.getValue().intValue(), oneDotThirteen.getValue());
+        // if placePositions is not empty, we'll look through it until we find a decent place position
+        if (!placePositions.isEmpty()) {
+            // have a few vars for multipop positions
+            BlockPos popPos = null;
+            float popMaxDmg = -1.0f;
 
-        BlockPos suggestedMultiPop = null;
-        float multiPopDamage = -1.0f;
+            // normal place positions
+            BlockPos placePos = null;
+            float placeMaxDmg = -1.0f;
 
-        canMultiPop = false;
+            // we need a label here as we need another loop in here, line
+            positions:
+            for (BlockPos pos : placePositions) {
+                // the location we need to calculate place position damage
+                double x = pos.getX() + 0.5, y = pos.getY() + 1.0, z = pos.getZ() + 0.5;
 
-        // if double pop positions were found
-        // @todo
-
-        if (!crystalPlacePositions.isEmpty()) {
-            loop: for (BlockPos pos : crystalPlacePositions) {
-                // check if we place a crystal there if it will pop us
-                float selfDamage = DamageUtils.calculateDamage(pos.getX() + 0.5, pos.getY() + 1.0, pos.getZ() + 0.5, Astra.mc.player);
-                // if the self damage is greater than the max damage allowed to be taken or we'll pop a totem, don't consider it
-                if (antiSuicide.getValue()) {
-                    if (selfDamage - 0.5f >= maxSelfDamage.getValue().floatValue() || DamageUtils.willPopTotem(Astra.mc.player, selfDamage - 0.5f)) {
-                        continue;
-                    }
-                }
-
-                // check for target damage
-                float targetDamage = DamageUtils.calculateDamage(pos.getX() + 0.5, pos.getY() + 1.0, pos.getZ() + 0.5, target);
-                if (selfDamage >= targetDamage || targetDamage < minDamage.getValue().floatValue()) {
+                // get the damage for us, and if antiSucide is on, make sure we wont commit sodoku
+                float selfDmg = DamageUtils.calculateDamage(x, y, z, Astra.mc.player) + 0.5f;
+                // if our damage is greater than the set maximum self damage we can take from that crystal, or the damage is greater than or equal to our health, tell it to go fuck itself
+                if (antiSuicide.getValue() && (selfDmg >= maxSelfDamage.getValue().floatValue() || selfDmg >= EntityUtil.getTotalHealth(Astra.mc.player))) {
                     continue;
                 }
 
-                if (multiPop.getValue() && canMultiPop(targetDamage)) {
-                    currentDamage = targetDamage;
-                    suggestedMultiPop = pos;
-                    multiPopDamage = targetDamage;
-                    canMultiPop = true;
-
+                float targetDmg = DamageUtils.calculateDamage(x, y, z, target);
+                // if the targets damage is less than the minimum damage, or our damage is greater than our targets damage, dont consider as a place pos
+                if (targetDmg < minDamage.getValue().floatValue() || selfDmg > targetDmg) {
                     continue;
                 }
 
-                if (antiFriendPop.getValue()) {
-                    for (Friend friend : Astra.friendManager.getFriends()) {
-                        EntityPlayer friendPlayer = Astra.serverManager.getPlayer(friend.getUuid());
-                        if (friendPlayer == null) {
+                // if anti friend popping is on, let's make sure we wont shit on our friends
+                // @todo a "just do it" setting like phobos has if the place pos is REALLY good but something is blocking it, use it anyway?
+                if (antiFriendPop.getValue() && !Astra.friendManager.getFriends().isEmpty()) {
+                    for (EntityPlayer friend : Astra.mc.world.getPlayers(EntityPlayer.class, (player) -> !Astra.friendManager.isFriend(player.getUniqueID()))) {
+                        if (friend == null || friend == Astra.mc.player) {
                             continue;
                         }
 
-                        float friendDamage = DamageUtils.calculateDamage(pos.getX() + 0.5, pos.getY() + 1.0, pos.getZ() + 0.5, Astra.mc.player);
-                        if (friendDamage >= targetDamage || friendDamage >= EntityUtil.getTotalHealth(friendPlayer) || DamageUtils.willPopTotem(friendPlayer, friendDamage)) {
-                            continue loop;
+                        float friendDmg = DamageUtils.calculateDamage(x, y, z, friend);
+                        if (friendDmg > targetDmg || friendDmg <= EntityUtil.getTotalHealth(friend)) {
+                            continue positions;
                         }
                     }
                 }
 
-                if ((suggestedMultiPop != null && multiPopDamage != -1.0f) && (targetDamage > multiPopDamage || selfDamage >= multiPopDamage)) {
-                    continue;
+                if (multiPop.getValue() && canMultiPop(targetDmg) && targetDmg > popMaxDmg) {
+                    popPos = pos;
+                    popMaxDmg = targetDmg;
                 }
 
-                positions.add(new Pair<>(pos, targetDamage));
+                if (targetDmg > placeMaxDmg) {
+                    placePos = pos;
+                    placeMaxDmg = targetDmg;
+                }
             }
-        }
 
-        if (suggestedMultiPop != null && multiPopDamage != -1.0f) {
-            currentPos = suggestedMultiPop;
-            currentDamage = multiPopDamage;
+            if (popMaxDmg != -1.0f && popMaxDmg > placeMaxDmg) {
+                currentPos = popPos;
+                currentDamage = popMaxDmg;
+                canMultiPop = true;
+                return;
+            }
 
-            return;
-        }
-
-        // @todo check for double pops found in the loop
-        if (!positions.isEmpty()) {
-            // sort by greatest damage
-            positions.sort(Comparator.comparingDouble(Pair::getValue));
-            // reverse cause java hates us
-            Collections.reverse(positions);
-
-            // get the first pos, and use it
-            Pair<BlockPos, Float> placePos = positions.get(0);
-
-            // set values;
-            currentPos = placePos.getKey();
-            currentDamage = placePos.getValue();
-        } else {
-            currentPos = null;
-            currentDamage = 0.0f;
-        }
-    }
-
-    private void doAntiWeakness() {
-        int old = InventoryUtils.switchInHotbar(ItemSword.class);
-        if (old == -1) {
-            // attempt to a axe
-            old = InventoryUtils.switchInHotbar(ItemAxe.class);
-            if (old == -1) {
+            if (placeMaxDmg != -1.0f) {
+                currentPos = placePos;
+                currentDamage = placeMaxDmg;
+                canMultiPop = false;
                 return;
             }
         }
 
-        slotBeforeTool = old;
+        currentPos = null;
+        currentDamage = 0.0f;
     }
 
-    private List<EntityEnderCrystal> mapOutCrystals() {
+    private boolean crystalCheck() {
+        if (Astra.mc.player.getHeldItemOffhand().getItem() == Items.END_CRYSTAL) {
+            hand = EnumHand.OFF_HAND;
+            return true;
+        } else {
+            for (int i = 0; i < 9; ++i) {
+                ItemStack stack = Astra.mc.player.inventory.getStackInSlot(i);
+                if (stack.getItem() == Items.END_CRYSTAL) {
+                    Astra.mc.player.inventory.currentItem = i;
+                    hand = EnumHand.MAIN_HAND;
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    private void doPlace(BlockPos pos) {
+        if (placeRotation.getValue() != Rotation.NONE) {
+            RotationUtils.rotate(pos, true);
+        }
+
+        WorldUtils.place(pos, hand, placeSwing.getValue(), false, sync.getValue());
+    }
+
+    private void doBreak(EntityEnderCrystal crystal) {
+        if (breakRotation.getValue() != Rotation.NONE) {
+            RotationUtils.rotate(crystal.getPosition(), true);
+        }
+
+        if (sync.getValue()) {
+            Astra.mc.player.connection.sendPacket(new CPacketUseEntity(crystal));
+        } else {
+            Astra.mc.playerController.attackEntity(Astra.mc.player, crystal);
+        }
+
+        if (breakSwing.getValue()) {
+            WorldUtils.swingArm(EnumHand.MAIN_HAND);
+        }
+    }
+
+    private List<EntityEnderCrystal> getSurroundingCrystals() {
         return Astra.mc.world.getEntities(EntityEnderCrystal.class, (crystal) -> Astra.mc.player.getDistance(crystal) <= breakRange.getValue().floatValue());
     }
 
@@ -380,13 +321,10 @@ public class CrystalAura extends Module {
         return target != null && !target.isDead && Astra.mc.player.getDistance(target) < targetRange.getValue().floatValue();
     }
 
-    // we can assume the target is well, the target set as a field here
     private boolean canMultiPop(float damage) {
-        damage -= 0.5f;
-        // the extraCalc thing doesn't work as intended, check this later @todo
-        if (damage > multiPopDamage.getValue().floatValue() && (extraCalculate.getValue() && damage > EntityUtil.getTotalHealth(target))) {
+        if (damage > multiPopDamage.getValue().floatValue()) {
             Timer timer = pops.get(target);
-            return timer == null || timer.passedMs(multiPopDelay.getValue().longValue());
+            return timer != null && timer.passedMs(multiPopDelay.getValue().longValue());
         }
 
         return false;
@@ -400,15 +338,13 @@ public class CrystalAura extends Module {
         target = null;
         currentPos = null;
         currentDamage = 0.0f;
-        crystalHand = EnumHand.MAIN_HAND;
+        hand = EnumHand.MAIN_HAND;
 
         canMultiPop = false;
         pops.clear();
 
         placeTimer.reset();
         breakTimer.reset();
-
-        slotBeforeTool = -1;
     }
 
     public enum Menu {

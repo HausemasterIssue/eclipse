@@ -23,15 +23,13 @@ public class VisualRange extends Module {
                 return;
             }
 
-            String text = event.getEntity().getName() + " has entered your visual range.";
             if (notification.getValue()) {
-                Notification notification = new Notification(
+                Astra.notificationManager.createNotification(new Notification(
                         "Player Entered Visual Range",
-                        Lists.newArrayList(text),
+                        Lists.newArrayList(event.getEntity().getName() + " has entered your visual range."),
                         Notification.Type.WARNING,
                         10L * 1000L
-                );
-                Astra.notificationManager.createNotification(notification);
+                ));
             }
         }
     }
@@ -43,15 +41,13 @@ public class VisualRange extends Module {
                 return;
             }
 
-            String text = event.getEntity().getName() + " has left your visual range.";
             if (notification.getValue()) {
-                Notification notification = new Notification(
+                Astra.notificationManager.createNotification(new Notification(
                         "Player Left Visual Range",
-                        Lists.newArrayList(text),
+                        Lists.newArrayList(event.getEntity().getName() + " has left your visual range."),
                         Notification.Type.WARNING,
                         10L * 1000L
-                );
-                Astra.notificationManager.createNotification(notification);
+                ));
             }
         }
     }

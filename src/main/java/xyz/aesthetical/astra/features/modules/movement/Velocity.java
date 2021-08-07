@@ -25,6 +25,11 @@ public class Velocity extends Module {
     public final Setting<Boolean> noKnockback = register(new Setting<>("Anti-Knockback", false).setDescription("If to take knockback"));
     public final Setting<Boolean> fishingHooks = register(new Setting<>("Fishing Hooks", false).setDescription("If to stop from being pulled by fishhooks"));
 
+    @Override
+    public String getDisplay() {
+        return "H: " + horizontal.getValue() + "%, V: " + vertical.getValue() + "%";
+    }
+
     @SubscribeEvent
     public void onPacketInbound(PacketEvent.Inbound event) {
         if (Module.fullNullCheck()) {

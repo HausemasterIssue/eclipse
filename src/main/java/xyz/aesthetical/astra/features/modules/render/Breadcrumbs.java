@@ -8,7 +8,7 @@ import xyz.aesthetical.astra.events.render.RenderEvent;
 import xyz.aesthetical.astra.features.settings.NumberSetting;
 import xyz.aesthetical.astra.features.settings.Setting;
 import xyz.aesthetical.astra.managers.modules.Module;
-import xyz.aesthetical.astra.util.ColorUtil;
+import xyz.aesthetical.astra.util.ColorUtils;
 import xyz.aesthetical.astra.util.RenderUtils;
 
 import java.awt.*;
@@ -77,7 +77,7 @@ public class Breadcrumbs extends Module {
                         (float) end.z,
                         width.getValue().floatValue(),
                         smooth.getValue(),
-                        ColorUtil.toRGBA(c.getRed(), c.getGreen(), c.getBlue(), 255)
+                        ColorUtils.toRGBA(c.getRed(), c.getGreen(), c.getBlue(), 255)
                 );
             }
 

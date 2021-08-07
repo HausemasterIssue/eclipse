@@ -10,12 +10,18 @@ import xyz.aesthetical.astra.events.render.RenderModelEvent;
 import xyz.aesthetical.astra.features.settings.NumberSetting;
 import xyz.aesthetical.astra.features.settings.Setting;
 import xyz.aesthetical.astra.managers.modules.Module;
+import xyz.aesthetical.astra.util.EnumConverter;
 
 @Module.Mod(name = "ESP", description = "wip")
 @Module.Info(category = Module.Category.RENDER)
 public class ESP extends Module {
     public final Setting<Mode> mode = register(new Setting<>("Mode", Mode.OUTLINE).setDescription("How to render the ESP"));
     public final NumberSetting width = register(new NumberSetting("Width", 1.0f).setMin(0.1f).setMax(5.0f).setDescription("The width of the line").setVisibility((e) -> mode.getValue() == Mode.OUTLINE || mode.getValue() == Mode.FILLED_OUTLINE || mode.getValue() == Mode.SHADER));
+
+    @Override
+    public String getDisplay() {
+        return EnumConverter.getActualName(mode.getValue());
+    }
 
     @SubscribeEvent
     public void onRenderModel(RenderModelEvent event) {

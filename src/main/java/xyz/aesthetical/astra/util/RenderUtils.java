@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL32;
@@ -217,6 +218,42 @@ public class RenderUtils {
         builder.pos(box.minX, box.minY, box.maxZ).color(red, green, blue, alpha).endVertex();
         builder.pos(box.maxX, box.minY, box.minZ).color(red, green, blue, alpha).endVertex();
         tessellator.draw();
+    }
+
+    public static void drawTag(BlockPos pos, String text, double yOffset, float backgroundAlpha) {
+        GlStateManager.translate(pos.getX(), pos.getY() + yOffset, pos.getZ());
+        GlStateManager.glNormal3f(0.0f, 1.0f, 0.0f);
+        GlStateManager.rotate(-Astra.mc.player.rotationYaw, 0.0f, 1.0f, 0.0f);
+        GlStateManager.rotate(Astra.mc.player.rotationPitch, 1.0f, 0.0f, 0.0f);
+        GlStateManager.scale(-0.025f, -0.025f, 0.025f);
+        GlStateManager.disableLighting();
+        GlStateManager.disableDepth();
+        GlStateManager.depthMask(false);
+        GlStateManager.enableBlend();
+        GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+        GlStateManager.disableTexture2D();
+
+        float i = Astra.textManager.getWidth(text) / 2.0f;
+
+        Tessellator tessellator = Tessellator.getInstance();
+        BufferBuilder buffer = tessellator.getBuffer();
+
+        buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
+        buffer.pos(-i - 1, -1, 0).color(0.0f, 0.0f, 0.0f, backgroundAlpha).endVertex();
+        buffer.pos(-i - 1, 8, 0).color(0.0f, 0.0f, 0.0f, backgroundAlpha).endVertex();
+        buffer.pos(i + 1, 8, 0).color(0.0f, 0.0f, 0.0f, backgroundAlpha).endVertex();
+        buffer.pos(i + 1, -1, 0).color(0.0f, 0.0f, 0.0f, backgroundAlpha).endVertex();
+        tessellator.draw();
+
+        GlStateManager.enableTexture2D();
+        GlStateManager.disableDepth();
+        GlStateManager.depthMask(true);
+
+        Astra.textManager.draw(text, -i, 0, -1);
+
+        GlStateManager.enableLighting();
+        GlStateManager.disableBlend();
+        GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
     }
 
     public static Vec3d getCameraPos() {

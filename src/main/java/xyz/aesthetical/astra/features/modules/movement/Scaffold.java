@@ -31,6 +31,7 @@ public class Scaffold extends Module {
     public final NumberSetting delay = register(new NumberSetting("Delay", 0.0f).setMin(0.0f).setMax(5.0f).setDescription("How long to wait in S before placing another block"));
     public final Setting<Boolean> rotate = register(new Setting<>("Rotate", true).setDescription("If to send a rotation packet"));
     public final Setting<Boolean> swing = register(new Setting<>("Swing", true).setDescription("If to swing when placing blocks"));
+    public final Setting<Boolean> sync = register(new Setting<>("Sync", false).setDescription("If to sync with the server by sending packets"));
     public final Setting<Boolean> noGravityBlocks = register(new Setting<>("No Gravity Blocks", true).setDescription("If to avoid placing gravity blocks"));
 
     private final Map<BlockPos, EnumFacing> positions = new HashMap<>();
@@ -72,7 +73,7 @@ public class Scaffold extends Module {
                         synchronized (positions.entrySet()) {
                             for (Map.Entry<BlockPos, EnumFacing> entry : positions.entrySet()) {
                                 currentPos = pos;
-                                WorldUtils.place(entry.getKey(), hand, swing.getValue(), true);
+                                WorldUtils.place(entry.getKey(), hand, swing.getValue(), true, sync.getValue());
 
                                 if (rotate.getValue()) {
                                     RotationUtils.rotate(pos, true);

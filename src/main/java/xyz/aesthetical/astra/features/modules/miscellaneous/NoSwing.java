@@ -13,6 +13,23 @@ public class NoSwing extends Module {
     public final Setting<Boolean> mainHand = register(new Setting<>("Main Hand", true).setDescription("If to cancel main hand swing packets"));
     public final Setting<Boolean> offhand = register(new Setting<>("Off Hand", true).setDescription("If to cancel off hand swing packets"));
 
+    @Override
+    public String getDisplay() {
+        String text = "";
+
+        boolean comma = false;
+        if (mainHand.getValue()) {
+            text += "Main";
+            comma = true;
+        }
+
+        if (offhand.getValue()) {
+            text += (comma ? ", " : "") + "Offhand";
+        }
+
+        return text;
+    }
+
     @SubscribeEvent
     public void onPacketOutbound(PacketEvent.Outbound event) {
         if (Module.fullNullCheck() && event.getPacket() instanceof CPacketAnimation) {

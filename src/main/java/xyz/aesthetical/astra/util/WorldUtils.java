@@ -6,6 +6,7 @@ import net.minecraft.entity.item.EntityEnderCrystal;
 import net.minecraft.init.Blocks;
 import net.minecraft.network.play.client.CPacketAnimation;
 import net.minecraft.network.play.client.CPacketEntityAction;
+import net.minecraft.network.play.client.CPacketPlayerTryUseItemOnBlock;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -40,6 +41,27 @@ public class WorldUtils {
                         blocks.add(new BlockPos(x, y + yOffset, z));
                     }
                     ++y;
+                }
+                ++z;
+            }
+            ++x;
+        }
+
+        return blocks;
+    }
+
+    public static ArrayList<BlockPos> getDisc(BlockPos pos, int radius, int yOffset) {
+        final ArrayList<BlockPos> blocks = new ArrayList<>();
+        double cx = pos.getX(), cy = pos.getY() + yOffset, cz = pos.getZ();
+        double x = cx - radius;
+
+        while (x <= cx + radius) {
+            double z = cz - radius;
+            while (z <= cz + radius) {
+                double dist = (cx - x) * (cx - x) + (cz - z) * (cz - z);
+                if (dist < radius * radius) {
+                    BlockPos position = new BlockPos(x, cy, z);
+                    blocks.add(position);
                 }
                 ++z;
             }
@@ -100,24 +122,38 @@ public class WorldUtils {
         return Astra.mc.world.getBlockState(pos).getBlock();
     }
 
-    public static EnumActionResult place(BlockPos pos, EnumHand hand, boolean swing, boolean sneak) {
-        EnumFacing facing = getFacing(pos);
-        Vec3d hitVector = new Vec3d(pos.offset(facing))
-                .add(0.5, 0.5, 0.5)
-                .add(new Vec3d(facing.getOpposite().getDirectionVec()).scale(0.5));
+    public static EnumActionResult place(BlockPos pos, EnumHand hand, boolean swing, boolean sneak, boolean packet) {
+//        if (sneak && !Astra.mc.player.isSneaking()) {
+//            Astra.mc.player.setSneaking(true);
+//            Astra.mc.player.connection.sendPacket(new CPacketEntityAction(Astra.mc.player, CPacketEntityAction.Action.START_SNEAKING));
+//        }
 
-        if (sneak && !Astra.mc.player.isSneaking()) {
-            Astra.mc.player.setSneaking(true);
-            Astra.mc.player.connection.sendPacket(new CPacketEntityAction(Astra.mc.player, CPacketEntityAction.Action.START_SNEAKING));
+        RayTraceResult result = Astra.mc.world.rayTraceBlocks(
+                new Vec3d(Astra.mc.player.posX, Astra.mc.player.posY + Astra.mc.player.getEyeHeight(), Astra.mc.player.posZ),
+                new Vec3d(pos).add(0.5, 0.5, 0.5)
+        );
+
+        EnumFacing facing = result == null || result.sideHit == null ? EnumFacing.UP : result.sideHit;
+        Vec3d hitVec = result == null ? new Vec3d(pos.offset(facing)).add(0.5, 0.5, 0.5).add(new Vec3d(facing.getOpposite().getDirectionVec()).scale(0.5)) : result.hitVec;
+
+        EnumActionResult action;
+        if (packet) {
+            Astra.mc.player.connection.sendPacket(new CPacketPlayerTryUseItemOnBlock(pos, facing, hand, 0.0f, 0.0f, 0.0f));
+            action = EnumActionResult.SUCCESS;
+        } else {
+            action = Astra.mc.playerController.processRightClickBlock(Astra.mc.player, Astra.mc.world, pos, facing, hitVec, hand);
         }
-
-        EnumActionResult result = Astra.mc.playerController.processRightClickBlock(Astra.mc.player, Astra.mc.world, pos, facing.getOpposite(), hitVector, hand);
 
         if (swing) {
-            swingArm(hand);
+            Astra.mc.player.swingArm(hand);
         }
 
-        return result;
+//        if (sneak && Astra.mc.player.isSneaking()) {
+//            Astra.mc.player.setSneaking(false);
+//            Astra.mc.player.connection.sendPacket(new CPacketEntityAction(Astra.mc.player, CPacketEntityAction.Action.STOP_SNEAKING));
+//        }
+
+        return action;
     }
 
     public static EnumFacing getFacing(BlockPos pos) {
@@ -155,13 +191,7 @@ public class WorldUtils {
     }
 
     public static void center() {
-        BlockPos actualPos = new BlockPos(Astra.mc.player.getPositionVector());
-
-        double x = Math.abs(actualPos.getX() - Astra.mc.player.posX);
-        double z = Math.abs(actualPos.getZ() - Astra.mc.player.posZ);
-        if (x >= 0.1 && z >= 0.1) {
-            Astra.mc.player.motionX = (actualPos.getX() - Astra.mc.player.posX) / 2.0;
-            Astra.mc.player.motionZ = (actualPos.getZ() - Astra.mc.player.posZ) / 2.0;
-        }
+        Astra.mc.player.posX = Math.floor(Astra.mc.player.posX);
+        Astra.mc.player.posZ = Math.floor(Astra.mc.player.posZ);
     }
 }

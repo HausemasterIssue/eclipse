@@ -1,6 +1,7 @@
 package xyz.aesthetical.astra.features.modules.client;
 
 import xyz.aesthetical.astra.features.settings.Setting;
+import xyz.aesthetical.astra.managers.TextManager;
 import xyz.aesthetical.astra.managers.modules.Module;
 
 @Module.Mod(name = "CustomFont", description = "Uses a custom font over the default one")
@@ -12,5 +13,10 @@ public class CustomFont extends Module {
 
     public CustomFont() {
         instance = this;
+    }
+
+    @Override
+    public String getDisplay() {
+        return TextManager.customFontRenderer.getFont().getFontName();
     }
 }

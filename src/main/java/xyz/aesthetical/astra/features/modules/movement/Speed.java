@@ -8,6 +8,7 @@ import xyz.aesthetical.astra.features.modules.movement.speed.Strafe;
 import xyz.aesthetical.astra.features.modules.movement.speed.Vanilla;
 import xyz.aesthetical.astra.features.settings.Setting;
 import xyz.aesthetical.astra.managers.modules.Module;
+import xyz.aesthetical.astra.util.EnumConverter;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,6 +36,11 @@ public class Speed extends Module {
         modes.put(Mode.STRAFE, Strafe.getInstance());
 
         modes.entrySet().forEach(e -> e.getValue().getSettings().forEach(this::register));
+    }
+
+    @Override
+    public String getDisplay() {
+        return EnumConverter.getActualName(mode.getValue());
     }
 
     @Override

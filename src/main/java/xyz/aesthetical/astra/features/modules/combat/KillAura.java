@@ -45,6 +45,15 @@ public class KillAura extends Module {
     private Entity target = null;
     private final Timer timer = new Timer();
 
+    @Override
+    public String getDisplay() {
+        if (target != null) {
+            return target.getName();
+        }
+
+        return super.getDisplay();
+    }
+
     @SubscribeEvent
     public void onUpdate(LivingEvent.LivingUpdateEvent event) {
         if (Module.fullNullCheck() && event.getEntityLiving() == Astra.mc.player) {

@@ -17,7 +17,7 @@ public class CityESP extends Module {
     };
 
     public final Setting<Mode> mode = register(new Setting<>("Mode", Mode.FILLED).setDescription("How to render blocks that someone can be cityed with"));
-    // @todo public final Setting<Boolean> burrow = register(new Setting<>("Burrow", false).setDescription("If to check for burrowed players"));
+    public final Setting<Boolean> burrow = register(new Setting<>("Burrow", false).setDescription("If to check for burrowed players"));
     public final Setting<Boolean> self = register(new Setting<>("Self", false).setDescription("If to show where you could be cityed"));
     public final Setting<Boolean> oneDotThirteen = register(new Setting<>("1.13", false).setDescription("If 1.13 placement of crystals is allowed"));
     public final Setting<Color> color = register(new Setting<>("Color", new Color(255, 60, 0)).setDescription("The color to render city blocks"));

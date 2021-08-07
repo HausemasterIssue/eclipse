@@ -3,7 +3,7 @@ package xyz.aesthetical.astra.gui.hudeditor;
 import net.minecraft.client.gui.GuiScreen;
 import xyz.aesthetical.astra.gui.hudeditor.components.Container;
 import xyz.aesthetical.astra.gui.hudeditor.elements.*;
-import xyz.aesthetical.astra.util.ColorUtil;
+import xyz.aesthetical.astra.util.ColorUtils;
 import xyz.aesthetical.astra.util.RenderUtils;
 
 import java.io.IOException;
@@ -21,6 +21,7 @@ public class GuiHUDEditor extends GuiScreen {
     private GuiHUDEditor() {
         elements.add(new Arraylist());
         elements.add(new ServerNotResponding());
+        elements.add(new TotemCount());
         elements.add(new Watermark());
         elements.add(new Welcomer());
 
@@ -46,7 +47,7 @@ public class GuiHUDEditor extends GuiScreen {
                 continue;
             }
 
-            RenderUtils.drawRect(element.getX(), element.getY(), element.getWidth(), element.getHeight(), ColorUtil.toRGBA(184, 184, 184, 55));
+            RenderUtils.drawRect(element.getX(), element.getY(), element.getWidth(), element.getHeight(), ColorUtils.toRGBA(184, 184, 184, 55));
             element.draw(mouseX, mouseY, partialTicks);
         }
 

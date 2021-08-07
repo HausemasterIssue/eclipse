@@ -109,8 +109,8 @@ public class BedBomb extends Module {
     @SubscribeEvent
     public void onRender(RenderEvent event) {
         if (Module.fullNullCheck() && placePos != null && direction != null) {
-            RenderUtils.drawFilledBox(new AxisAlignedBB(placePos).offset(RenderUtils.getCameraPos()), ColorUtil.toRGBA(255, 255, 255, 80));
-            RenderUtils.drawFilledBox(new AxisAlignedBB(placePos.offset(direction)).offset(RenderUtils.getCameraPos()), ColorUtil.toRGBA(255, 255, 255, 80));
+            RenderUtils.drawFilledBox(new AxisAlignedBB(placePos).offset(RenderUtils.getCameraPos()), ColorUtils.toRGBA(255, 255, 255, 80));
+            RenderUtils.drawFilledBox(new AxisAlignedBB(placePos.offset(direction)).offset(RenderUtils.getCameraPos()), ColorUtils.toRGBA(255, 255, 255, 80));
         }
     }
 
@@ -126,7 +126,7 @@ public class BedBomb extends Module {
                 placeTimer.reset();
 
                 // @todo setting - swing
-                WorldUtils.place(placePos, hand, true, true);
+                WorldUtils.place(placePos, hand, true, true, sync.getValue());
             }
 
             if (sleepTimer.passedMs(sleepDelay.getValue().longValue())) {

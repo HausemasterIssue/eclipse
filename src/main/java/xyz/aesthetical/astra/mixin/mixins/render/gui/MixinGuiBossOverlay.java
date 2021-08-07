@@ -1,4 +1,4 @@
-package xyz.aesthetical.astra.mixin.mixins.render;
+package xyz.aesthetical.astra.mixin.mixins.render.gui;
 
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiBossOverlay;

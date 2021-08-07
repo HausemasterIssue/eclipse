@@ -49,11 +49,14 @@ public class ModuleManager {
         modules.add(new CrystalAura());
         modules.add(new HoleFiller());
         modules.add(new KillAura());
+        modules.add(new LogoutSpots());
+        modules.add(new Offhand());
         modules.add(new SelfTrap());
         modules.add(new Surround());
         modules.add(new WebAura());
 
         // exploits
+        modules.add(new GhostHand());
         modules.add(new MountBypass());
         modules.add(new NewChunks());
         modules.add(new NoHandshake());
@@ -68,15 +71,20 @@ public class ModuleManager {
         modules.add(new AutoRespawn());
         modules.add(new AutoTunnel());
         modules.add(new Avoid());
+        modules.add(new BuildHeight());
         modules.add(new Chat());
+        modules.add(new ExtraTab());
         modules.add(new FakePlayer());
         modules.add(new FastUse());
         modules.add(new Freecam());
+        modules.add(new LagSwitch());
         modules.add(new LiquidInteract());
         modules.add(new MCF());
         modules.add(new MCP());
+        modules.add(new MultiTask());
         modules.add(new NoRotate());
         modules.add(new NoSwing());
+        modules.add(new Nuker());
         modules.add(new PearlNotifier());
         modules.add(new PortalModifier());
         modules.add(new Time());
@@ -84,6 +92,7 @@ public class ModuleManager {
 
         // movement
         modules.add(new AutoWalk());
+        modules.add(new Blink());
         modules.add(new EntityControl());
         modules.add(new GuiMove());
         modules.add(new IceSpeed());
@@ -99,17 +108,20 @@ public class ModuleManager {
         modules.add(new Velocity());
 
         // render
+        modules.add(new BlockProgress());
         modules.add(new Breadcrumbs());
         modules.add(new Brightness());
         modules.add(new ViewClip());
         modules.add(new Chams());
         modules.add(new CustomFOV());
         modules.add(new ESP());
+        modules.add(new GuiModifier());
         modules.add(new HoleESP());
         modules.add(new NoRender());
         modules.add(new Search());
         modules.add(new Tracers());
         modules.add(new ViewModel());
+        modules.add(new VoidESP());
         modules.add(new Xray());
         modules.add(new Yaw());
 

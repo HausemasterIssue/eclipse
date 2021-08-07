@@ -7,7 +7,7 @@ import xyz.aesthetical.astra.events.render.RenderEvent;
 import xyz.aesthetical.astra.features.settings.Setting;
 import xyz.aesthetical.astra.managers.HoleManager;
 import xyz.aesthetical.astra.managers.modules.Module;
-import xyz.aesthetical.astra.util.ColorUtil;
+import xyz.aesthetical.astra.util.ColorUtils;
 import xyz.aesthetical.astra.util.RenderUtils;
 
 import java.awt.*;
@@ -37,7 +37,7 @@ public class HoleESP extends Module {
                 Color c = info.isSafe() ? safeColor.getValue() : unsafeColor.getValue();
 
                 if (mode.getValue() == RenderMode.FILLED || mode.getValue() == RenderMode.BOTH) {
-                    int color = ColorUtil.toRGBA(c.getRed(), c.getGreen(), c.getBlue(), 80);
+                    int color = ColorUtils.toRGBA(c.getRed(), c.getGreen(), c.getBlue(), 80);
                     AxisAlignedBB box = new AxisAlignedBB(info.getPos()).offset(RenderUtils.getCameraPos());
                     RenderUtils.drawFilledBox(box, color);
                 }

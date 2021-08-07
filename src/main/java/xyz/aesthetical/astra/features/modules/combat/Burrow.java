@@ -19,6 +19,7 @@ import xyz.aesthetical.astra.managers.commands.text.ChatColor;
 import xyz.aesthetical.astra.managers.commands.text.TextBuilder;
 import xyz.aesthetical.astra.managers.modules.Module;
 import xyz.aesthetical.astra.mixin.mixins.IMinecraft;
+import xyz.aesthetical.astra.util.InventoryUtils;
 import xyz.aesthetical.astra.util.RotationUtils;
 import xyz.aesthetical.astra.util.WorldUtils;
 
@@ -38,8 +39,10 @@ public class Burrow extends Module {
     public final Setting<Boolean> swing = register(new Setting<>("Swing", true).setDescription("If to swing when placing the blocks"));
     public final Setting<Boolean> sneak = register(new Setting<>("Sneak", true).setDescription("If to send a sneak packet when placing the block"));
     public final Setting<Boolean> rotate = register(new Setting<>("Rotate", true).setDescription("If to send a rotation packet"));
+    public final Setting<Boolean> sync = register(new Setting<>("Sync", false).setDescription("If to sync with the server by sending packets"));
     public final NumberSetting rotationPackets = register(new NumberSetting("Rotation Packets", 1).setMin(1).setMax(10).setDescription("How many rotation packets to send").setVisibility((m) -> rotate.getValue()));
     public final NumberSetting offset = register(new NumberSetting("Offset", 3.0f).setMin(-5.0f).setMax(5.0f).setDescription("How much to lag back"));
+    public final Setting<Boolean> silent = register(new Setting<>("Slient Switch", true).setDescription("If to silently switch to the block"));
 
     private BlockPos placePos = null;
     private int oldSlot = -1;
@@ -47,12 +50,6 @@ public class Burrow extends Module {
     @Override
     public void onEnabled() {
         if (Module.fullNullCheck()) {
-//            if (isBurrowed(new BlockPos(Eclipse.mc.player.getPositionVector()).add(0, 1, 0))) {
-//                Command.send(new TextBuilder().append(ChatColor.Dark_Gray, "You are already burrowed in a block. Toggling..."));
-//                toggle();
-//                return;
-//            }
-
             int oldSlot = switchToBlock();
             if (oldSlot == -1) {
                 Command.send(new TextBuilder().append(ChatColor.Dark_Gray, "No block found in hotbar, toggling..."));
@@ -99,7 +96,7 @@ public class Burrow extends Module {
             }
         }
 
-        WorldUtils.place(origin, EnumHand.MAIN_HAND, swing.getValue(), sneak.getValue());
+        WorldUtils.place(origin, EnumHand.MAIN_HAND, swing.getValue(), sneak.getValue(), sync.getValue());
         ((IMinecraft) Astra.mc).setRightClickDelayTimer(4);
 
         Astra.mc.player.inventory.currentItem = oldSlot;
@@ -130,9 +127,7 @@ public class Burrow extends Module {
         for (int i = 0; i < 9; ++i) {
             ItemStack stack = Astra.mc.player.inventory.getStackInSlot(i);
             if (!stack.isEmpty() && stack.getItem() instanceof ItemBlock && ((ItemBlock) stack.getItem()).getBlock() == b) {
-                int oldSlot = Astra.mc.player.inventory.currentItem;
-                Astra.mc.player.inventory.currentItem = i;
-                return oldSlot;
+                return InventoryUtils.switchTo(i, silent.getValue());
             }
         }
 

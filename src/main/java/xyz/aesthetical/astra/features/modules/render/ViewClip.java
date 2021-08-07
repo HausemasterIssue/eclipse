@@ -13,4 +13,9 @@ public class ViewClip extends Module {
     public ViewClip() {
         instance = this;
     }
+
+    @Override
+    public String getDisplay() {
+        return String.valueOf(range.getValue());
+    }
 }

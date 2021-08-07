@@ -38,7 +38,6 @@ public class Mode {
     public void onDisabled() { }
 
     public void use() {
-        System.out.println("penis");
         MinecraftForge.EVENT_BUS.register(this);
         onEnabled();
     }
